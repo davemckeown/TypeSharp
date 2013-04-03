@@ -2,5 +2,5 @@
 <TypeSharp>
   <OutputProject>TypeSharpManager</OutputProject>
   <ShowToolPaneWindow>True</ShowToolPaneWindow>
-  <CreateTestClasses>True</CreateTestClasses>
+  <CreateTestClasses>False</CreateTestClasses>
 </TypeSharp>

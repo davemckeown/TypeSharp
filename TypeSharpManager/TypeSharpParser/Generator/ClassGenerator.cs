@@ -32,7 +32,7 @@ namespace TypeSharpParser.Generator
             foreach (PropertyDeclarationSyntax property in syntax.DescendantNodes().OfType<PropertyDeclarationSyntax>())
             {
                 string propertyName = property.Identifier.Value.ToString();
-                string propertyType = ConvertToTypeScriptType(property.Type.ToString(), module);
+                string propertyType = ConvertType(property.Type, module);
 
                 output.Append('\t').Append(string.Format("{0}: {1};", propertyName, propertyType)).Append(Environment.NewLine).Append(Environment.NewLine);
             }
@@ -41,7 +41,7 @@ namespace TypeSharpParser.Generator
             {
                 string methodName = method.Identifier.Value.ToString();
                 string methodArgs = this.ConvertMethodArguments(method, module);
-                string methodType = this.ConvertToTypeScriptType(method.ReturnType.ToString(), module);
+                string methodType = ConvertType(method.ReturnType, module);
                 string methodBody = this.ConvertMethodBody(method);
 
                 output.Append('\t').Append(string.Format("{0}({1}): {2} {{", methodName, methodArgs, methodType)).Append(Environment.NewLine);
@@ -71,6 +71,8 @@ namespace TypeSharpParser.Generator
                     return "return 0;";
                 case "string":
                     return "return \"\";";
+                case "void":
+                    return string.Empty;
                 default:
                     return "return null;";
             }

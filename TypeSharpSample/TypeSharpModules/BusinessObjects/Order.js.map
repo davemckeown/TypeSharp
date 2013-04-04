@@ -1,0 +1,1 @@
+{"version":3,"file":"Order.js","sources":["Order.ts"],"names":["BusinessObjects","BusinessObjects.Order","BusinessObjects.Order.constructor","BusinessObjects.Order.AddProducts"],"mappings":"AAAA,6CAA6C;AAE7C,IAAO,eAAe;AAYrB,CAZD,UAAO,eAAe;IAErBA;QAAAC;AAQCA,QAJAA,8BAAAA,UAAYA,QAAmBA,EAAEA,KAAaA;QAE9CE,CAACA;QAEFF;AAACA,IAADA,CAACA,IAAAD;IARDA,8BAQCA,IAAAA;AAEFA,CAACA,6CAAA"}

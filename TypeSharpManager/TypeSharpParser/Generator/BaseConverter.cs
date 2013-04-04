@@ -32,7 +32,7 @@ namespace TypeSharpParser.Generator
             foreach (ParameterSyntax argument in method.ParameterList.Parameters)
             {
                 string argumentName = argument.Identifier.Value.ToString();
-                string argumentType = this.ConvertToTypeScriptType(argument.Type.ToString(), module);
+                string argumentType = ConvertType(argument.Type, module);
 
                 result.Append(string.Format("{0}: {1}, ", argumentName, argumentType));
             }
@@ -45,6 +45,16 @@ namespace TypeSharpParser.Generator
             }
 
             return args;
+        }
+
+        public bool IsCollection(string parameter)
+        {
+            return parameter.Contains("List<") || parameter.Contains("Collection<") || parameter.Contains("Enumerable<") || parameter.Contains("[]");
+        }
+
+        public string ConvertType(TypeSyntax property, string module)
+        {
+            return string.Format("{0}{1}", ConvertToTypeScriptType(property is GenericNameSyntax ? (property as GenericNameSyntax).TypeArgumentList.Arguments[0].ToString() : property.ToString(), module), IsCollection(property.ToString()) ? "[]" : string.Empty);
         }
 
         /// <summary>
@@ -82,6 +92,8 @@ namespace TypeSharpParser.Generator
                     return "Date";
                 case "string":
                     return "string";
+                case "void":
+                    return "void";
                 default:
                     return "any";
             }

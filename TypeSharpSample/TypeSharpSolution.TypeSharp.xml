@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TypeSharp>
-  <OutputProject>TypeSharpManager</OutputProject>
+  <OutputProject>TypeSharpModules</OutputProject>
   <ShowToolPaneWindow>True</ShowToolPaneWindow>
-  <CreateTestClasses>False</CreateTestClasses>
+  <CreateTestClasses>True</CreateTestClasses>
 </TypeSharp>

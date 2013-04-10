@@ -7,6 +7,9 @@ using TypeSharp;
 
 namespace BusinessObjects
 {
+    /// <summary>
+    /// Testing Comment
+    /// </summary>
     [TypeSharpClass]
     public class Product
     {

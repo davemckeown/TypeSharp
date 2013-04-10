@@ -15,7 +15,7 @@
     <AssemblyName>MVCSolution</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -171,6 +171,31 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="BusinessObjects.Tests\ProductTests.ts" />
+    <TypeScriptCompile Include="BusinessObjects.Tests\OrderTests.ts" />
+    <TypeScriptCompile Include="BusinessObjects.Tests\CustomerTests.ts" />
+    <Content Include="BusinessObjects.Tests\CustomerTests.js">
+      <DependentUpon>CustomerTests.ts</DependentUpon>
+    </Content>
+    <Content Include="BusinessObjects.Tests\OrderTests.js">
+      <DependentUpon>OrderTests.ts</DependentUpon>
+    </Content>
+    <Content Include="BusinessObjects.Tests\ProductTests.js">
+      <DependentUpon>ProductTests.ts</DependentUpon>
+    </Content>
+    <Content Include="BusinessObjects\BusinessObjects.d.ts" />
+    <TypeScriptCompile Include="BusinessObjects\Product.ts" />
+    <TypeScriptCompile Include="BusinessObjects\Order.ts" />
+    <TypeScriptCompile Include="BusinessObjects\Customer.ts" />
+    <Content Include="BusinessObjects\Customer.js">
+      <DependentUpon>Customer.ts</DependentUpon>
+    </Content>
+    <Content Include="BusinessObjects\Order.js">
+      <DependentUpon>Order.ts</DependentUpon>
+    </Content>
+    <Content Include="BusinessObjects\Product.js">
+      <DependentUpon>Product.ts</DependentUpon>
+    </Content>
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -228,6 +253,10 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <TypeScriptCompile Include="Namespaces\BusinessObjects.ts" />
+    <Content Include="Namespaces\BusinessObjects.js">
+      <DependentUpon>BusinessObjects.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -242,6 +271,10 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="tsUnit.js">
+      <DependentUpon>tsUnit.ts</DependentUpon>
+    </Content>
+    <Content Include="tsUnit.ts" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -306,7 +339,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51700</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:51683/</IISUrl>
+          <IISUrl>http://localhost/MVCSolution</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

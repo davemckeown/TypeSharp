@@ -9,6 +9,7 @@ namespace TypeSharpParser.Generator
     using System.Linq;
     using System.Text;
     using Roslyn.Compilers.CSharp;
+    using System.Xml.Linq;
 
     /// <summary>
     /// ClassGenerator that converts a ClassDeclarationSyntax to TypeScript
@@ -27,6 +28,8 @@ namespace TypeSharpParser.Generator
             StringBuilder output = new StringBuilder();
             this.ParsedTypes = parsedTypes;
 
+            output.Append(this.ConvertSyntaxComments(syntax));
+
             output.Append(string.Format("export class {0} {{", syntax.Identifier.Value.ToString())).Append(Environment.NewLine).Append(Environment.NewLine);
 
             foreach (PropertyDeclarationSyntax property in syntax.DescendantNodes().OfType<PropertyDeclarationSyntax>())
@@ -44,6 +47,8 @@ namespace TypeSharpParser.Generator
                 string methodType = ConvertType(method.ReturnType, module);
                 string methodBody = this.ConvertMethodBody(method);
 
+
+                output.Append(this.ConvertSyntaxComments(method));
                 output.Append('\t').Append(string.Format("{0}({1}): {2} {{", methodName, methodArgs, methodType)).Append(Environment.NewLine);
                 output.Append('\t', 2).Append(methodBody).Append(Environment.NewLine);
                 output.Append('\t').Append("}").Append(Environment.NewLine).Append(Environment.NewLine);

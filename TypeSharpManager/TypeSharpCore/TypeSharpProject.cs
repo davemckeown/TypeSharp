@@ -119,7 +119,21 @@ namespace TypeSharp.Core
                     "TypeSharp", 
                     new XElement("OutputProject", string.Empty), 
                     new XElement("ShowToolPaneWindow", string.Empty),
+                    new XElement("TestingServer", string.Empty),
                     new XElement("CreateTestClasses", string.Empty)));
+        }
+
+        public string TestingServer
+        {
+            get
+            {
+                return this.settings.Descendants("TestingServer").Single().Value;
+            }
+
+            set
+            {
+                this.settings.Descendants("TestingServer").Single().Value = value;
+            }
         }
     }
 }

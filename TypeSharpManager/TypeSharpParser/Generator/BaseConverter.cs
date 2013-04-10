@@ -6,7 +6,10 @@
 namespace TypeSharpParser.Generator
 {
     using System.Text;
+    using System.Linq;
     using Roslyn.Compilers.CSharp;
+    using System;
+    using System.Xml.Linq;
 
     /// <summary>
     /// BaseConverter contains common code for interface and class converters
@@ -97,6 +100,94 @@ namespace TypeSharpParser.Generator
                 default:
                     return "any";
             }
+        }
+
+        protected string ConvertSyntaxComments(ClassDeclarationSyntax syntax)
+        {
+            StringBuilder output = new StringBuilder(string.Empty);
+            var comment = syntax.GetLeadingTrivia().FirstOrDefault(x => x.Kind == SyntaxKind.DocumentationCommentTrivia);
+
+            if (comment != null)
+            {
+                StringBuilder xml = new StringBuilder();
+
+
+                foreach (string line in comment.GetStructure().ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                {
+                    xml.Append(line.Trim('/', ' ', '\t'));
+                }
+
+                var nodes = XDocument.Parse("<comment>" + xml.ToString() + "</comment>");
+
+                var summary = nodes.Descendants("summary").FirstOrDefault();
+
+                if (summary != null)
+                {
+                    output.Append("/**").Append(Environment.NewLine);
+                    output.Append("* ").Append(summary.Value).Append(Environment.NewLine);
+                    output.Append("*/").Append(Environment.NewLine);
+                }
+            }
+
+            return output.ToString();
+        }
+
+        protected string ConvertSyntaxComments(MethodDeclarationSyntax syntax)
+        {
+            StringBuilder output = new StringBuilder(string.Empty);
+            var comment = syntax.GetLeadingTrivia().FirstOrDefault(x => x.Kind == SyntaxKind.DocumentationCommentTrivia);
+
+            if (comment != null)
+            {
+                StringBuilder xml = new StringBuilder();
+
+                foreach (string line in comment.GetStructure().ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                {
+                    xml.Append(line.Trim('/', ' ', '\t'));
+                }
+
+                var nodes = XDocument.Parse("<comment>" + xml.ToString() + "</comment>");
+
+                var summary = nodes.Descendants("summary").FirstOrDefault();
+
+                if (summary != null)
+                {
+                    output.Append('\t').Append("/**").Append(Environment.NewLine);
+                    output.Append('\t').Append("* ").Append(summary.Value).Append(Environment.NewLine);
+                    output.Append('\t').Append("*/").Append(Environment.NewLine);
+                }
+            }
+
+            return output.ToString();
+        }
+
+        protected string ConvertSyntaxComments(PropertyDeclarationSyntax syntax)
+        {
+            StringBuilder output = new StringBuilder(string.Empty);
+            var comment = syntax.GetLeadingTrivia().FirstOrDefault(x => x.Kind == SyntaxKind.DocumentationCommentTrivia);
+
+            if (comment != null)
+            {
+                StringBuilder xml = new StringBuilder();
+
+                foreach (string line in comment.GetStructure().ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                {
+                    xml.Append(line.Trim('/', ' ', '\t'));
+                }
+
+                var nodes = XDocument.Parse("<comment>" + xml.ToString() + "</comment>");
+
+                var summary = nodes.Descendants("summary").FirstOrDefault();
+
+                if (summary != null)
+                {
+                    output.Append('\t').Append("/**").Append(Environment.NewLine);
+                    output.Append('\t').Append("* ").Append(summary.Value).Append(Environment.NewLine);
+                    output.Append('\t').Append("*/").Append(Environment.NewLine);
+                }
+            }
+
+            return output.ToString();
         }
     }
 }

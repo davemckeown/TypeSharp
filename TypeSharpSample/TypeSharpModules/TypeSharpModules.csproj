@@ -17,34 +17,42 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <TypeScriptCompile Include="BusinessObjects.Tests\ProductTests.ts" />
+    <TypeScriptCompile Include="BusinessObjects.Tests\OrderTests.ts" />
     <TypeScriptCompile Include="BusinessObjects.Tests\CustomerTests.ts" />
+    <TypeScriptCompile Include="a\Main.d..ts" />
+    <Content Include="a\Main.d..js">
+      <DependentUpon>Main.d..ts</DependentUpon>
+    </Content>
     <Content Include="BusinessObjects.Tests\CustomerTests.js">
       <DependentUpon>CustomerTests.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="BusinessObjects.Tests\OrderTests.ts" />
     <Content Include="BusinessObjects.Tests\OrderTests.js">
       <DependentUpon>OrderTests.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="BusinessObjects.Tests\ProductTests.ts" />
     <Content Include="BusinessObjects.Tests\ProductTests.js">
       <DependentUpon>ProductTests.ts</DependentUpon>
     </Content>
     <Content Include="BusinessObjects\BusinessObjects.d.ts" />
+    <TypeScriptCompile Include="BusinessObjects\Product.ts" />
+    <TypeScriptCompile Include="BusinessObjects\Order.ts" />
     <TypeScriptCompile Include="BusinessObjects\Customer.ts" />
     <Content Include="BusinessObjects\Customer.js">
       <DependentUpon>Customer.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="BusinessObjects\Order.ts" />
     <Content Include="BusinessObjects\Order.js">
       <DependentUpon>Order.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="BusinessObjects\Product.ts" />
     <Content Include="BusinessObjects\Product.js">
       <DependentUpon>Product.ts</DependentUpon>
     </Content>
     <Content Include="default.htm" />
     <Content Include="app.js">
       <DependentUpon>app.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="a\BusinessObjects.ts" />
+    <Content Include="a\BusinessObjects.js">
+      <DependentUpon>BusinessObjects.ts</DependentUpon>
     </Content>
     <Content Include="tsUnit.js">
       <DependentUpon>tsUnit.ts</DependentUpon>
@@ -80,7 +88,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>51940</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:51640/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

@@ -7,6 +7,9 @@ using TypeSharp;
 
 namespace BusinessObjects
 {
+    /// <summary>
+    /// Testing Comment
+    /// </summary>
     [TypeSharpClass]
     public class Order
     {
@@ -16,6 +19,11 @@ namespace BusinessObjects
             Products = new List<Product>();
         }
 
+        /// <summary>
+        /// Add products to the order
+        /// </summary>
+        /// <param name="products"></param>
+        /// <param name="group"></param>
         public void AddProducts(List<Product> products, string group) 
         {
             Products.AddRange(products);

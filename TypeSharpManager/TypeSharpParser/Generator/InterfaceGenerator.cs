@@ -34,6 +34,7 @@ namespace TypeSharpParser.Generator
                 string propName = property.Identifier.Value.ToString();
                 string propType = ConvertType(property.Type, module);
 
+                output.Append(this.ConvertSyntaxComments(property));
                 output.Append('\t').Append(string.Format("{0}: {1};", propName, propType)).Append(Environment.NewLine).Append(Environment.NewLine);
             }
 
@@ -43,6 +44,7 @@ namespace TypeSharpParser.Generator
                 string methArgs = ConvertMethodArguments(method, module);
                 string methType = ConvertType(method.ReturnType, module);
 
+                output.Append(this.ConvertSyntaxComments(method));
                 output.Append('\t').Append(string.Format("{0}({1}): {2};", methName, methArgs, methType)).Append(Environment.NewLine).Append(Environment.NewLine);
             }
 

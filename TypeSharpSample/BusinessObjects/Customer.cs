@@ -11,7 +11,16 @@ namespace BusinessObjects
     /// Testing comment
     /// </summary>
     [TypeSharpClass]
-    public class Customer
+    public class Customer : BusinessObjects.IOrderAssignable
     {
+        /// <summary>
+        /// Assign the Order to the Customer
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public bool AssignOrder(Order order) 
+        {
+            return true;
+        }
     }
 }

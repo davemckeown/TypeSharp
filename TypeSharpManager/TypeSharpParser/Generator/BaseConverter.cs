@@ -91,6 +91,8 @@ namespace TypeSharpParser.Generator
                 case "short":
                 case "double":
                     return "number";
+                case "bool":
+                    return "bool";
                 case "DateTime":
                     return "Date";
                 case "string":
@@ -107,7 +109,7 @@ namespace TypeSharpParser.Generator
             StringBuilder output = new StringBuilder(string.Empty);
             var comment = syntax.GetLeadingTrivia().FirstOrDefault(x => x.Kind == SyntaxKind.DocumentationCommentTrivia);
 
-            if (comment != null)
+            if (comment.Kind != SyntaxKind.None)
             {
                 StringBuilder xml = new StringBuilder();
 
@@ -124,7 +126,7 @@ namespace TypeSharpParser.Generator
                 if (summary != null)
                 {
                     output.Append("/**").Append(Environment.NewLine);
-                    output.Append("* ").Append(summary.Value).Append(Environment.NewLine);
+                    output.Append("* @classdesc ").Append(summary.Value).Append(Environment.NewLine);
                     output.Append("*/").Append(Environment.NewLine);
                 }
             }
@@ -132,12 +134,17 @@ namespace TypeSharpParser.Generator
             return output.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="syntax"></param>
+        /// <returns></returns>
         protected string ConvertSyntaxComments(MethodDeclarationSyntax syntax)
         {
             StringBuilder output = new StringBuilder(string.Empty);
             var comment = syntax.GetLeadingTrivia().FirstOrDefault(x => x.Kind == SyntaxKind.DocumentationCommentTrivia);
 
-            if (comment != null)
+            if (comment.Kind != SyntaxKind.None)
             {
                 StringBuilder xml = new StringBuilder();
 
@@ -154,6 +161,14 @@ namespace TypeSharpParser.Generator
                 {
                     output.Append('\t').Append("/**").Append(Environment.NewLine);
                     output.Append('\t').Append("* ").Append(summary.Value).Append(Environment.NewLine);
+
+                    foreach (var param in nodes.Descendants("param"))
+                    {
+                        output.Append('\t').Append("* @param ").Append(param.Attribute("name").Value).Append(" ").Append(param.Value).Append(Environment.NewLine);
+                    }
+
+                    output.Append(nodes.Descendants("returns").Count() > 0 ? string.Format("{0}* @return {1}{2}", '\t', nodes.Descendants("returns").First().Value, Environment.NewLine) : string.Empty);
+
                     output.Append('\t').Append("*/").Append(Environment.NewLine);
                 }
             }
@@ -166,7 +181,7 @@ namespace TypeSharpParser.Generator
             StringBuilder output = new StringBuilder(string.Empty);
             var comment = syntax.GetLeadingTrivia().FirstOrDefault(x => x.Kind == SyntaxKind.DocumentationCommentTrivia);
 
-            if (comment != null)
+            if (comment.Kind != SyntaxKind.None)
             {
                 StringBuilder xml = new StringBuilder();
 

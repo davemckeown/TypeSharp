@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TypeSharp>
-  <OutputProject>MVCSolution</OutputProject>
-  <ShowToolPaneWindow>False</ShowToolPaneWindow>
+  <OutputProject>TypeSharpModules</OutputProject>
+  <ShowToolPaneWindow>True</ShowToolPaneWindow>
   <TestingServer>http://localhost/MVCSolution</TestingServer>
   <CreateTestClasses>True</CreateTestClasses>
 </TypeSharp>

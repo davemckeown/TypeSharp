@@ -8,13 +8,24 @@ using TypeSharp;
 namespace BusinessObjects
 {
     /// <summary>
-    /// Testing Comment
+    /// Product
     /// </summary>
     [TypeSharpClass]
     public class Product
     {
+        /// <summary>
+        /// Gets or sets the product name
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the unit price
+        /// </summary>
         public decimal UnitPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Description
+        /// </summary>
         public string Description { get; set; }
     }
 }

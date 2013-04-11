@@ -22,6 +22,7 @@ namespace TypeSharp.VisualStudioExtension
     using TypeSharp.Core;
     using TypeSharpParser;
     using TypeSharpParser.Types;
+    using Microsoft.VisualStudio;
 
     /// <summary>
     /// TypeSharpController manages interaction with the visual studio extension
@@ -147,39 +148,72 @@ namespace TypeSharp.VisualStudioExtension
         /// <param name="action">Build action</param>
         public void BuildEvents_OnBuildDone(EnvDTE.vsBuildScope scope, EnvDTE.vsBuildAction action)
         {
-            try
-            {
-                TypeSharpProject project = new TypeSharpProject(this.IDEInstance.Solution.FullName);
 
-                if (this.Model.BuildResults.All(x => x == true) && !string.IsNullOrEmpty(project.OutputProject))
+                System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
-                    TypeSharpProject settings = new TypeSharpProject(this.IDEInstance.Solution.FullName);
-                    string outputProject = settings.OutputProject;
-                    bool createTests = settings.CreateTestClasses;
 
-                    TypeScriptGenerator sources = new TypeScriptGenerator(this.Model.SourceFiles.ToList());
-                    List<TypeScriptOutput> output = sources.GenerateOutputFiles();
-                    Dictionary<string, TypeScriptReferenceOutput> references = sources.GenerateReferenceOutputFiles(output);
+                    object icon = null;
 
-                    IEnumerable<string> modules = output.Select(x => x.Module).Distinct().Select(x => x.Contains('.') ? x.Substring(0, x.IndexOf('.')) : x).Distinct();
-
-                    Dictionary<string, bool> expandState = this.PersistSolutionExplorerState(outputProject);
-                    this.UnlinkExistingProjectFiles(modules, outputProject);
-                    this.SyncProjectFiles(output, references, outputProject);
-                    this.SyncNamespaces(output, references, outputProject);
-
-                    if (settings.CreateTestClasses)
+                    try
                     {
-                        this.SyncProjectTestFiles(output.Where(x => x.IsClass).ToList(), references, outputProject);
+
+                        TypeSharpProject project = new TypeSharpProject(this.IDEInstance.Solution.FullName);
+
+                        if (this.Model.BuildResults.All(x => x == true) && !string.IsNullOrEmpty(project.OutputProject))
+                        {
+
+                            icon = (short)Microsoft.VisualStudio.Shell.Interop.Constants.SBAI_Build;
+
+                            IDEInstance.StatusBar.Text = "Building TypeSharp Sources...";
+                            IDEInstance.StatusBar.Animate(true, icon);
+
+                            TypeSharpProject settings = new TypeSharpProject(this.IDEInstance.Solution.FullName);
+                            string outputProject = settings.OutputProject;
+                            bool createTests = settings.CreateTestClasses;
+
+                            TypeScriptGenerator sources = new TypeScriptGenerator(this.Model.SourceFiles.ToList());
+                            List<TypeScriptOutput> output = sources.GenerateOutputFiles();
+                            Dictionary<string, TypeScriptReferenceOutput> references = sources.GenerateReferenceOutputFiles(output);
+
+                            IEnumerable<string> modules = output.Select(x => x.Module).Distinct().Select(x => x.Contains('.') ? x.Substring(0, x.IndexOf('.')) : x).Distinct();
+
+                            Dictionary<string, bool> expandState = this.PersistSolutionExplorerState(outputProject);
+                            this.UnlinkExistingProjectFiles(modules, outputProject);
+                            this.SyncProjectFiles(output, references, outputProject);
+                            this.SyncNamespaces(output, references, outputProject);
+
+                            if (settings.CreateTestClasses)
+                            {
+                                this.SyncProjectTestFiles(output.Where(x => x.IsClass).ToList(), references, outputProject);
+                            }
+
+                            this.RestoreSolutionExplorerState(expandState, outputProject);
+
+                            IDEInstance.StatusBar.Text = "Build Succeeded";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Assert(false, ex.ToString());
+                        Guid paneTarget = VSConstants.OutputWindowPaneGuid.BuildOutputPane_guid;
+                        IVsOutputWindowPane buildPane;
+                        var window = (Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow).GetPane(ref paneTarget, out buildPane);
+
+                        buildPane.OutputString(ex.ToString());
+
+                        IDEInstance.StatusBar.Text = "TypeSharp Build Failed";
+                    }
+                    finally
+                    {
+                        if (icon != null)
+                        {
+                            IDEInstance.StatusBar.Animate(false, icon);
+                        }
                     }
 
-                    this.RestoreSolutionExplorerState(expandState, outputProject);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Assert(false, ex.ToString());
-            }
+
+                });
+
         }
 
         private void SyncNamespaces(List<TypeScriptOutput> output, Dictionary<string, TypeScriptReferenceOutput> references, string outputTo)
@@ -188,12 +222,15 @@ namespace TypeSharp.VisualStudioExtension
 
             if (project != null)
             {
+                string fullNamespacePath = Path.GetDirectoryName(project.FullName) + Path.DirectorySeparatorChar + "Namespaces";
+
+                if (Directory.Exists(fullNamespacePath))
+                {
+                    Directory.Delete(fullNamespacePath, true);
+                }
 
                 foreach (string assembly in output.Select(x => x.Module).Distinct())
                 {
-
-                    string fullPath = Path.GetDirectoryName(project.FullName) + Path.DirectorySeparatorChar + "Namespaces";
-
                     if (!File.Exists(Path.GetDirectoryName(project.FullName) + Path.DirectorySeparatorChar + assembly + ".ts"))
                     {
                         File.Create(Path.GetDirectoryName(project.FullName) + Path.DirectorySeparatorChar + assembly + ".ts");
@@ -221,13 +258,13 @@ namespace TypeSharp.VisualStudioExtension
 
                     if (!items.OfType<ProjectItem>().Any(x => x.Name == typescriptFileName))
                     {
-                        File.WriteAllText(fullPath.ToString() + Path.DirectorySeparatorChar + typescriptFileName, string.Empty);
-                        File.WriteAllText(fullPath.ToString() + Path.DirectorySeparatorChar + javascriptFileName, string.Empty);
+                        File.WriteAllText(fullNamespacePath.ToString() + Path.DirectorySeparatorChar + typescriptFileName, string.Empty);
+                        File.WriteAllText(fullNamespacePath.ToString() + Path.DirectorySeparatorChar + javascriptFileName, string.Empty);
 
-                        ProjectItem item = items.AddFromTemplate(fullPath.ToString() + Path.DirectorySeparatorChar + typescriptFileName, typescriptFileName);
+                        ProjectItem item = items.AddFromTemplate(fullNamespacePath.ToString() + Path.DirectorySeparatorChar + typescriptFileName, typescriptFileName);
 
                         item.Properties.Item("ItemType").Value = "TypeScriptCompile";
-                        item.ProjectItems.AddFromTemplate(fullPath.ToString() + Path.DirectorySeparatorChar + javascriptFileName, javascriptFileName);
+                        item.ProjectItems.AddFromTemplate(fullNamespacePath.ToString() + Path.DirectorySeparatorChar + javascriptFileName, javascriptFileName);
                     }
                 }
 

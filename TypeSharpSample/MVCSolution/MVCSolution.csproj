@@ -190,6 +190,10 @@
     <Content Include="BusinessObjects\Customer.js">
       <DependentUpon>Customer.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="BusinessObjects\IOrderAssignable.ts" />
+    <Content Include="BusinessObjects\IOrderAssignable.js">
+      <DependentUpon>IOrderAssignable.ts</DependentUpon>
+    </Content>
     <Content Include="BusinessObjects\Order.js">
       <DependentUpon>Order.ts</DependentUpon>
     </Content>
@@ -253,6 +257,10 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <TypeScriptCompile Include="Models\BusinessObjects.ts" />
+    <Content Include="Models\BusinessObjects.js">
+      <DependentUpon>BusinessObjects.ts</DependentUpon>
+    </Content>
     <TypeScriptCompile Include="Namespaces\BusinessObjects.ts" />
     <Content Include="Namespaces\BusinessObjects.js">
       <DependentUpon>BusinessObjects.ts</DependentUpon>

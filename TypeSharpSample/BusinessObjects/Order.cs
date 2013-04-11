@@ -22,13 +22,16 @@ namespace BusinessObjects
         /// <summary>
         /// Add products to the order
         /// </summary>
-        /// <param name="products"></param>
-        /// <param name="group"></param>
+        /// <param name="products">The products to add</param>
+        /// <param name="group">The group name</param>
         public void AddProducts(List<Product> products, string group) 
         {
             Products.AddRange(products);
         }
 
+        /// <summary>
+        /// Gets or sets the products list
+        /// </summary>
         public List<Product> Products { get; set; }
     }
 }

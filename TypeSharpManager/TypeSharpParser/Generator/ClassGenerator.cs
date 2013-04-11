@@ -29,7 +29,6 @@ namespace TypeSharpParser.Generator
             this.ParsedTypes = parsedTypes;
 
             output.Append(this.ConvertSyntaxComments(syntax));
-
             output.Append(string.Format("export class {0} {{", syntax.Identifier.Value.ToString())).Append(Environment.NewLine).Append(Environment.NewLine);
 
             foreach (PropertyDeclarationSyntax property in syntax.DescendantNodes().OfType<PropertyDeclarationSyntax>())
@@ -37,7 +36,18 @@ namespace TypeSharpParser.Generator
                 string propertyName = property.Identifier.Value.ToString();
                 string propertyType = ConvertType(property.Type, module);
 
-                output.Append('\t').Append(string.Format("{0}: {1};", propertyName, propertyType)).Append(Environment.NewLine).Append(Environment.NewLine);
+
+                try
+                {
+                    output.Append(this.ConvertSyntaxComments(property));
+                    output.Append('\t').Append(string.Format("{0}: {1};", propertyName, propertyType)).Append(Environment.NewLine).Append(Environment.NewLine);
+                }
+                catch (Exception ex)
+                {
+                    var str = ex.ToString();
+                }
+
+
             }
 
             foreach (MethodDeclarationSyntax method in syntax.DescendantNodes().OfType<MethodDeclarationSyntax>())
@@ -66,6 +76,11 @@ namespace TypeSharpParser.Generator
         /// <returns>The method body</returns>
         private string ConvertMethodBody(MethodDeclarationSyntax method)
         {
+
+            StringBuilder output = new StringBuilder(string.Empty);
+
+            output.Append(string.Format("/** @todo Implement {0} */", method.Identifier.ToString())).Append(Environment.NewLine).Append('\t', 2);
+
             switch (method.ReturnType.ToString())
             {
                 case "int":
@@ -73,14 +88,19 @@ namespace TypeSharpParser.Generator
                 case "long":
                 case "short":
                 case "double":
-                    return "return 0;";
+                    output.Append("return 0;");
+                    break;
                 case "string":
                     return "return \"\";";
                 case "void":
-                    return string.Empty;
+                    output.Append("return;");
+                    break;
                 default:
-                    return "return null;";
+                    output.Append("return null;");
+                    break;
             }
+
+            return output.ToString();
         }
     }
 }

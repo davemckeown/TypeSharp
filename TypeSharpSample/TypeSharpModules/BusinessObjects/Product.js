@@ -2,7 +2,10 @@
 var BusinessObjects;
 (function (BusinessObjects) {
     /**
-    * Testing Comment
+    * @classdesc Product
+    */
+    /**
+    * @classdesc BusinessObjects
     */
     var Product = (function () {
         function Product() { }

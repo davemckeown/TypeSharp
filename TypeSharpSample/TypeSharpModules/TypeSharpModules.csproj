@@ -18,16 +18,6 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="default.htm" />
-    <Content Include="app.js">
-      <DependentUpon>app.ts</DependentUpon>
-    </Content>
-    <Content Include="tsUnit.js">
-      <DependentUpon>tsUnit.ts</DependentUpon>
-    </Content>
-    <Content Include="tsUnit.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="app.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />

@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeSharpModules", "TypeSha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "BusinessObjects\BusinessObjects.csproj", "{0D3D3091-101B-40A7-82D9-AC98109C7916}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCSolution", "MVCSolution\MVCSolution.csproj", "{74B8F6EE-502C-40CD-A25B-893C837848EF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +19,6 @@ Global
 		{0D3D3091-101B-40A7-82D9-AC98109C7916}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D3D3091-101B-40A7-82D9-AC98109C7916}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D3D3091-101B-40A7-82D9-AC98109C7916}.Release|Any CPU.Build.0 = Release|Any CPU
-		{74B8F6EE-502C-40CD-A25B-893C837848EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74B8F6EE-502C-40CD-A25B-893C837848EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74B8F6EE-502C-40CD-A25B-893C837848EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

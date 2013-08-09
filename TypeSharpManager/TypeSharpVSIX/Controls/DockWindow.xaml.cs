@@ -17,7 +17,7 @@ namespace TypeSharp.VisualStudioExtension.Controls
     /// </summary>
     public partial class DockWindow : UserControl
     {
-        TestRunner nodeRunner = new TestRunner(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+        //TestRunner nodeRunner = new TestRunner(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
         /// <summary>
         /// Initializes a new instance of the DockWindow class
@@ -26,7 +26,7 @@ namespace TypeSharp.VisualStudioExtension.Controls
         {
             this.InitializeComponent();
 
-            nodeRunner.OnTestResult += nodeRunner_OnTestResult;
+            //nodeRunner.OnTestResult += nodeRunner_OnTestResult;
         }
 
         void nodeRunner_OnTestResult(string result)
@@ -50,7 +50,7 @@ namespace TypeSharp.VisualStudioExtension.Controls
 
             //System.Diagnostics.Process.Start(node);
 
-            nodeRunner.SendCommand();
+            //nodeRunner.SendCommand();
         }
 
         /// <summary>

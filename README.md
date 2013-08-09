@@ -4,7 +4,7 @@ TypeSharp is a C# to TypeScript code generator and testing tool built as a Visua
 
 Status Update
 ---
-August 8th 2013 - The repository is now public, however the code has not been updated in several months due to changes in the TypeScript language spec. With the introduction of generics and the 0.9 release of TypeScript stabilizing I am preparing to make major updates to the project. I am welcoming feedback and contributions from the community, please feel free to send a pull request of file an issue. If you would like to collaborate on development or have any questions my email is davemckeown@outlook.com
+August 8th 2013 - The repository is now public, however the code has not been updated in several months due to changes in the TypeScript language spec. With the introduction of generics and the 0.9 release of TypeScript stabilizing I am preparing to make major updates to the project. I am welcoming feedback and contributions from the community, please feel free to send a pull request or file an issue. If you would like to collaborate on development or have any questions my email is davemckeown@outlook.com
 
 To track progress as the project is updated for TypeScript 0.9 see the following issue:
 
@@ -25,3 +25,8 @@ Start External Program: C:\Program Files (x86)\Microsoft Visual Studio 11.0\Comm
 Command Line Arguments: /rootsuffix Exp
 
 Once the extension launches in debug mode you can open the project TypeSharpSample in the root directory to experiment. You may need to specify an output project (TypeSharpModules in sample project) under Tools -> TypeSharp before building to see the TypeScript output.
+
+
+License
+---
+Apache License 2.0

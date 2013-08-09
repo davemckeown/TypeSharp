@@ -9,6 +9,7 @@ namespace TypeSharpParser.Generator
     using System.Linq;
     using System.Text;
     using Roslyn.Compilers.CSharp;
+    using System.Xml.Linq;
 
     /// <summary>
     /// ClassGenerator that converts a ClassDeclarationSyntax to TypeScript
@@ -27,23 +28,37 @@ namespace TypeSharpParser.Generator
             StringBuilder output = new StringBuilder();
             this.ParsedTypes = parsedTypes;
 
+            output.Append(this.ConvertSyntaxComments(syntax));
             output.Append(string.Format("export class {0} {{", syntax.Identifier.Value.ToString())).Append(Environment.NewLine).Append(Environment.NewLine);
 
             foreach (PropertyDeclarationSyntax property in syntax.DescendantNodes().OfType<PropertyDeclarationSyntax>())
             {
                 string propertyName = property.Identifier.Value.ToString();
-                string propertyType = ConvertToTypeScriptType(property.Type.ToString(), module);
+                string propertyType = ConvertType(property.Type, module);
 
-                output.Append('\t').Append(string.Format("{0}: {1};", propertyName, propertyType)).Append(Environment.NewLine).Append(Environment.NewLine);
+
+                try
+                {
+                    output.Append(this.ConvertSyntaxComments(property));
+                    output.Append('\t').Append(string.Format("{0}: {1};", propertyName, propertyType)).Append(Environment.NewLine).Append(Environment.NewLine);
+                }
+                catch (Exception ex)
+                {
+                    var str = ex.ToString();
+                }
+
+
             }
 
             foreach (MethodDeclarationSyntax method in syntax.DescendantNodes().OfType<MethodDeclarationSyntax>())
             {
                 string methodName = method.Identifier.Value.ToString();
                 string methodArgs = this.ConvertMethodArguments(method, module);
-                string methodType = this.ConvertToTypeScriptType(method.ReturnType.ToString(), module);
+                string methodType = ConvertType(method.ReturnType, module);
                 string methodBody = this.ConvertMethodBody(method);
 
+
+                output.Append(this.ConvertSyntaxComments(method));
                 output.Append('\t').Append(string.Format("{0}({1}): {2} {{", methodName, methodArgs, methodType)).Append(Environment.NewLine);
                 output.Append('\t', 2).Append(methodBody).Append(Environment.NewLine);
                 output.Append('\t').Append("}").Append(Environment.NewLine).Append(Environment.NewLine);
@@ -61,6 +76,11 @@ namespace TypeSharpParser.Generator
         /// <returns>The method body</returns>
         private string ConvertMethodBody(MethodDeclarationSyntax method)
         {
+
+            StringBuilder output = new StringBuilder(string.Empty);
+
+            output.Append(string.Format("/** @todo Implement {0} */", method.Identifier.ToString())).Append(Environment.NewLine).Append('\t', 2);
+
             switch (method.ReturnType.ToString())
             {
                 case "int":
@@ -68,12 +88,19 @@ namespace TypeSharpParser.Generator
                 case "long":
                 case "short":
                 case "double":
-                    return "return 0;";
+                    output.Append("return 0;");
+                    break;
                 case "string":
                     return "return \"\";";
+                case "void":
+                    output.Append("return;");
+                    break;
                 default:
-                    return "return null;";
+                    output.Append("return null;");
+                    break;
             }
+
+            return output.ToString();
         }
     }
 }

@@ -81,6 +81,19 @@ namespace TypeSharp.VisualStudioExtension.Controls
             }
         }
 
+        public string TestingServer
+        {
+            get
+            {
+                return this.project.TestingServer;
+            }
+
+            set
+            {
+                this.project.TestingServer = value;
+            }
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether tests should be generated
         /// </summary>

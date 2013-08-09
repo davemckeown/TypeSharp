@@ -16,8 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeSharpParser", "TypeShar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeScriptUnit", "TypeScriptUnit\TypeScriptUnit.csproj", "{C80EAA90-36B9-43AE-A691-FC0FF1AF3B07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeSharpBridge", "TypeSharpBridge\TypeSharpBridge.csproj", "{99C74BA4-E118-475E-81C8-318DE4983F7D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,10 +42,6 @@ Global
 		{C80EAA90-36B9-43AE-A691-FC0FF1AF3B07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C80EAA90-36B9-43AE-A691-FC0FF1AF3B07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C80EAA90-36B9-43AE-A691-FC0FF1AF3B07}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99C74BA4-E118-475E-81C8-318DE4983F7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99C74BA4-E118-475E-81C8-318DE4983F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99C74BA4-E118-475E-81C8-318DE4983F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99C74BA4-E118-475E-81C8-318DE4983F7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

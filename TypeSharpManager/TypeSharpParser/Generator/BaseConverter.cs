@@ -6,7 +6,10 @@
 namespace TypeSharpParser.Generator
 {
     using System.Text;
+    using System.Linq;
     using Roslyn.Compilers.CSharp;
+    using System;
+    using System.Xml.Linq;
 
     /// <summary>
     /// BaseConverter contains common code for interface and class converters
@@ -32,7 +35,7 @@ namespace TypeSharpParser.Generator
             foreach (ParameterSyntax argument in method.ParameterList.Parameters)
             {
                 string argumentName = argument.Identifier.Value.ToString();
-                string argumentType = this.ConvertToTypeScriptType(argument.Type.ToString(), module);
+                string argumentType = ConvertType(argument.Type, module);
 
                 result.Append(string.Format("{0}: {1}, ", argumentName, argumentType));
             }
@@ -45,6 +48,16 @@ namespace TypeSharpParser.Generator
             }
 
             return args;
+        }
+
+        public bool IsCollection(string parameter)
+        {
+            return parameter.Contains("List<") || parameter.Contains("Collection<") || parameter.Contains("Enumerable<") || parameter.Contains("[]");
+        }
+
+        public string ConvertType(TypeSyntax property, string module)
+        {
+            return string.Format("{0}{1}", ConvertToTypeScriptType(property is GenericNameSyntax ? (property as GenericNameSyntax).TypeArgumentList.Arguments[0].ToString() : property.ToString(), module), IsCollection(property.ToString()) ? "[]" : string.Empty);
         }
 
         /// <summary>
@@ -78,13 +91,118 @@ namespace TypeSharpParser.Generator
                 case "short":
                 case "double":
                     return "number";
+                case "bool":
+                    return "bool";
                 case "DateTime":
                     return "Date";
                 case "string":
                     return "string";
+                case "void":
+                    return "void";
                 default:
                     return "any";
             }
+        }
+
+        protected string ConvertSyntaxComments(ClassDeclarationSyntax syntax)
+        {
+            StringBuilder output = new StringBuilder(string.Empty);
+            var comment = syntax.GetLeadingTrivia().FirstOrDefault(x => x.Kind == SyntaxKind.DocumentationCommentTrivia);
+
+            if (comment.Kind != SyntaxKind.None)
+            {
+                StringBuilder xml = new StringBuilder();
+
+
+                foreach (string line in comment.GetStructure().ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                {
+                    xml.Append(line.Trim('/', ' ', '\t'));
+                }
+
+                var nodes = XDocument.Parse("<comment>" + xml.ToString() + "</comment>");
+
+                var summary = nodes.Descendants("summary").FirstOrDefault();
+
+                if (summary != null)
+                {
+                    output.Append("/**").Append(Environment.NewLine);
+                    output.Append("* @classdesc ").Append(summary.Value).Append(Environment.NewLine);
+                    output.Append("*/").Append(Environment.NewLine);
+                }
+            }
+
+            return output.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="syntax"></param>
+        /// <returns></returns>
+        protected string ConvertSyntaxComments(MethodDeclarationSyntax syntax)
+        {
+            StringBuilder output = new StringBuilder(string.Empty);
+            var comment = syntax.GetLeadingTrivia().FirstOrDefault(x => x.Kind == SyntaxKind.DocumentationCommentTrivia);
+
+            if (comment.Kind != SyntaxKind.None)
+            {
+                StringBuilder xml = new StringBuilder();
+
+                foreach (string line in comment.GetStructure().ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                {
+                    xml.Append(line.Trim('/', ' ', '\t'));
+                }
+
+                var nodes = XDocument.Parse("<comment>" + xml.ToString() + "</comment>");
+
+                var summary = nodes.Descendants("summary").FirstOrDefault();
+
+                if (summary != null)
+                {
+                    output.Append('\t').Append("/**").Append(Environment.NewLine);
+                    output.Append('\t').Append("* ").Append(summary.Value).Append(Environment.NewLine);
+
+                    foreach (var param in nodes.Descendants("param"))
+                    {
+                        output.Append('\t').Append("* @param ").Append(param.Attribute("name").Value).Append(" ").Append(param.Value).Append(Environment.NewLine);
+                    }
+
+                    output.Append(nodes.Descendants("returns").Count() > 0 ? string.Format("{0}* @return {1}{2}", '\t', nodes.Descendants("returns").First().Value, Environment.NewLine) : string.Empty);
+
+                    output.Append('\t').Append("*/").Append(Environment.NewLine);
+                }
+            }
+
+            return output.ToString();
+        }
+
+        protected string ConvertSyntaxComments(PropertyDeclarationSyntax syntax)
+        {
+            StringBuilder output = new StringBuilder(string.Empty);
+            var comment = syntax.GetLeadingTrivia().FirstOrDefault(x => x.Kind == SyntaxKind.DocumentationCommentTrivia);
+
+            if (comment.Kind != SyntaxKind.None)
+            {
+                StringBuilder xml = new StringBuilder();
+
+                foreach (string line in comment.GetStructure().ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                {
+                    xml.Append(line.Trim('/', ' ', '\t'));
+                }
+
+                var nodes = XDocument.Parse("<comment>" + xml.ToString() + "</comment>");
+
+                var summary = nodes.Descendants("summary").FirstOrDefault();
+
+                if (summary != null)
+                {
+                    output.Append('\t').Append("/**").Append(Environment.NewLine);
+                    output.Append('\t').Append("* ").Append(summary.Value).Append(Environment.NewLine);
+                    output.Append('\t').Append("*/").Append(Environment.NewLine);
+                }
+            }
+
+            return output.ToString();
         }
     }
 }

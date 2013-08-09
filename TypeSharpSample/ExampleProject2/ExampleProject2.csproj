@@ -37,21 +37,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TypeSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\TypeSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\DataRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ExampleProject\ExampleProject.csproj">
-      <Project>{93d4e589-0355-4c8f-a018-d012017a1ab1}</Project>
-      <Name>ExampleProject</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TypeSharp\TypeSharp.csproj">
-      <Project>{1c837a86-b651-4b57-a567-e27d7c83aeab}</Project>
-      <Name>TypeSharp</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -94,7 +94,9 @@ namespace TypeSharpParser
             {
                 TypeScriptReferenceOutput reference = new TypeScriptReferenceOutput(module);
 
-                foreach (TypeScriptOutput file in output.Where(x => x.Module == module))
+                string name = module;
+
+                foreach (TypeScriptOutput file in output.Where(x => x.Module == name))
                 {
                     reference.References.Add(file);
                 }
@@ -104,12 +106,14 @@ namespace TypeSharpParser
 
             foreach (string module in output.Select(x => x.Module).Distinct())
             {
-                if (this.parsedTypes.References[module] != null)
+                if (this.parsedTypes.References[module] == null)
                 {
-                    foreach (string reference in this.parsedTypes.References[module])
-                    {
-                        result[module].ModuleReferences.Add(result[reference]);
-                    }
+                    continue;
+                }
+
+                foreach (string reference in this.parsedTypes.References[module])
+                {
+                    result[module].ModuleReferences.Add(result[reference]);
                 }
             }
 

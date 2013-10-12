@@ -3,9 +3,14 @@
 // </copyright>
 // <author>Dave McKeown</author>
 
-namespace TypeSharpController.Types
+namespace TypeSharpParser.Types.TypeScript
 {
     using System.Collections.Generic;
+    using System.Linq;
+
+    using Antlr.Runtime;
+
+    using TypeSharpController.Types;
 
     /// <summary>
     /// MethodDeclaration represents a class or interface method declaration
@@ -15,7 +20,7 @@ namespace TypeSharpController.Types
         /// <summary>
         /// A list of MethodArgumentDeclaration instances that form the methods arguments
         /// </summary>
-        private List<MethodArgumentDeclaration> arguments = new List<MethodArgumentDeclaration>();
+        private readonly List<MethodArgumentDeclaration> arguments = new List<MethodArgumentDeclaration>();
 
         /// <summary>
         /// Gets the method's arguments
@@ -47,25 +52,17 @@ namespace TypeSharpController.Types
                 return false;
             }
 
-            if (this.Identifier != compare.Identifier)
+            if (compare != null && this.Identifier != compare.Identifier)
             {
                 return false;
             }
 
-            if (this.Arguments.Count != compare.Arguments.Count)
+            if (compare != null && this.Arguments.Count != compare.Arguments.Count)
             {
                 return false;
             }
 
-            for (int x = 0; x < this.Arguments.Count; x++)
-            {
-                if (!this.Arguments[x].Equals(compare.Arguments[x]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return !this.Arguments.Where((t, x) => compare != null && !t.Equals(compare.Arguments[x])).Any();
         }
 
         /// <summary>
@@ -74,7 +71,11 @@ namespace TypeSharpController.Types
         /// <returns>The object hash code</returns>
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            int hash = 13;
+            hash = (hash * 7) + this.Arguments.GetHashCode();
+            hash = (hash * 7) + this.Identifier.GetHashCode();
+
+            return hash;
         }
     }
 }

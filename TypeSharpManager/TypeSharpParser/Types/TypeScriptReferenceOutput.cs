@@ -20,12 +20,12 @@ namespace TypeSharpParser.Types
         /// <summary>
         /// The list of TypeScriptReferenceOutput instances for external module references
         /// </summary>
-        private List<TypeScriptReferenceOutput> moduleReferences = new List<TypeScriptReferenceOutput>();
+        private readonly List<TypeScriptReferenceOutput> moduleReferences = new List<TypeScriptReferenceOutput>();
 
         /// <summary>
         /// The list of TypeScriptOutput instances for internal module references
         /// </summary>
-        private List<TypeScriptOutput> references = new List<TypeScriptOutput>();
+        private readonly List<TypeScriptOutput> references = new List<TypeScriptOutput>();
 
         /// <summary>
         /// Initializes a new instance of the TypeScriptReferenceOutput class
@@ -88,27 +88,12 @@ namespace TypeSharpParser.Types
         }
 
         /// <summary>
-        /// Determines the relative reference path between the target module and another module reference
-        /// </summary>
-        /// <param name="reference">The target reference</param>
-        /// <returns>A relative URI</returns>
-        private string DetermineRelativeReferencePath(string reference)
-        {
-            string root = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            Uri from = new Uri(this.BuildReferencePath(root, this.Module));
-            Uri to = new Uri(this.BuildReferencePath(root, reference));
-
-            return string.Format("{0}{1}.d.ts", Uri.UnescapeDataString(from.MakeRelativeUri(to).ToString().Replace('/', Path.DirectorySeparatorChar)), reference);
-        }
-
-        /// <summary>
         /// Builds the reference path based on the Module name
         /// </summary>
         /// <param name="root">The root directory</param>
         /// <param name="module">The module name</param>
         /// <returns>A full path with the root and module</returns>
-        private string BuildReferencePath(string root, string module)
+        private static string BuildReferencePath(string root, string module)
         {
             StringBuilder path = new StringBuilder(root + Path.DirectorySeparatorChar);
             Stack<string> submodules = new Stack<string>();
@@ -138,6 +123,21 @@ namespace TypeSharpParser.Types
             }
 
             return path.ToString();
+        }
+
+        /// <summary>
+        /// Determines the relative reference path between the target module and another module reference
+        /// </summary>
+        /// <param name="reference">The target reference</param>
+        /// <returns>A relative URI</returns>
+        private string DetermineRelativeReferencePath(string reference)
+        {
+            string root = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            Uri from = new Uri(BuildReferencePath(root, this.Module));
+            Uri to = new Uri(BuildReferencePath(root, reference));
+
+            return string.Format("{0}{1}.d.ts", Uri.UnescapeDataString(from.MakeRelativeUri(to).ToString().Replace('/', Path.DirectorySeparatorChar)), reference);
         }
     }
 }

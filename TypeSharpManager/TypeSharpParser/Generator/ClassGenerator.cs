@@ -6,6 +6,7 @@
 namespace TypeSharpParser.Generator
 {
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using System.Text;
     using Roslyn.Compilers.CSharp;
@@ -22,13 +23,13 @@ namespace TypeSharpParser.Generator
         /// <param name="module">The module</param>
         /// <param name="parsedTypes">TypeAggregator reference</param>
         /// <returns>TypeScript syntax</returns>
-        public string Generate(Roslyn.Compilers.CSharp.ClassDeclarationSyntax syntax, string module, TypeAggregator parsedTypes)
+        public string Generate(ClassDeclarationSyntax syntax, string module, TypeAggregator parsedTypes)
         {
             StringBuilder output = new StringBuilder();
             this.ParsedTypes = parsedTypes;
 
             output.Append(this.ConvertSyntaxComments(syntax));
-            output.Append(string.Format("export class {0} {{", syntax.Identifier.Value.ToString())).Append(Environment.NewLine).Append(Environment.NewLine);
+            output.Append(string.Format("export class {0} {{", syntax.Identifier.Value)).Append(Environment.NewLine).Append(Environment.NewLine);
 
             foreach (PropertyDeclarationSyntax property in syntax.DescendantNodes().OfType<PropertyDeclarationSyntax>())
             {
@@ -42,16 +43,18 @@ namespace TypeSharpParser.Generator
                 }
                 catch (Exception ex)
                 {
-                    var str = ex.ToString();
+                    Debug.Assert(false, ex.ToString());
                 }
             }
 
             foreach (MethodDeclarationSyntax method in syntax.DescendantNodes().OfType<MethodDeclarationSyntax>())
             {
-                string methodName = method.Identifier.Value.ToString();
+                string methodName = method.TypeParameterList.Parameters.Count == 0
+                                        ? method.Identifier.Value.ToString()
+                                        : this.ConvertMethodTypeParameters(method);
                 string methodArgs = this.ConvertMethodArguments(method, module);
                 string methodType = ConvertType(method.ReturnType, module);
-                string methodBody = this.ConvertMethodBody(method);
+                string methodBody = ConvertMethodBody(method);
 
                 output.Append(this.ConvertSyntaxComments(method));
                 output.Append('\t').Append(string.Format("{0}({1}): {2} {{", methodName, methodArgs, methodType)).Append(Environment.NewLine);
@@ -64,12 +67,27 @@ namespace TypeSharpParser.Generator
             return output.ToString();
         }
 
+        private string ConvertMethodTypeParameters(MethodDeclarationSyntax method)
+        {
+            StringBuilder signature = new StringBuilder();
+
+            signature.Append(method.Identifier.Value);
+
+            foreach (TypeParameterSyntax parameter in method.TypeParameterList.Parameters)
+            {
+                // TODO: Implement
+
+            }
+
+            return string.Empty;
+        }
+
         /// <summary>
         /// Generates a default body stub for a method
         /// </summary>
         /// <param name="method">The method declaration</param>
         /// <returns>The method body</returns>
-        private string ConvertMethodBody(MethodDeclarationSyntax method)
+        private static string ConvertMethodBody(MethodDeclarationSyntax method)
         {
             StringBuilder output = new StringBuilder(string.Empty);
 

@@ -70,7 +70,6 @@
     <Compile Include="Generator\ReferenceAggregator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Generator\TypeAggregator.cs" />
-    <Compile Include="SourceInspector.cs" />
     <Compile Include="TypeScriptGenerator.cs" />
     <Compile Include="Types\TypeScript\MethodArgumentDeclaration.cs" />
     <Compile Include="Types\TypeScript\MethodDeclaration.cs" />

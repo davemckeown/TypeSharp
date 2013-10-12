@@ -20,7 +20,7 @@ namespace TypeSharpParser.Types
         /// <summary>
         /// The content of the TypeScript file
         /// </summary>
-        private StringBuilder content = new StringBuilder();
+        private readonly StringBuilder content = new StringBuilder();
 
         /// <summary>
         /// Initializes a new instance of the TypeScriptOutput class
@@ -82,7 +82,7 @@ namespace TypeSharpParser.Types
                 output.Append(string.Format("/// <reference path=\"{0}.d.ts\" />", this.Module)).Append(Environment.NewLine).Append(Environment.NewLine);
                 output.Append(string.Format("module {0} {{", this.Module)).Append(Environment.NewLine).Append(Environment.NewLine);
 
-                foreach (string line in this.content.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                foreach (string line in this.content.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None))
                 {
                     output.Append('\t').Append(line).Append(Environment.NewLine);
                 }
@@ -103,7 +103,7 @@ namespace TypeSharpParser.Types
                 StringBuilder testClass = new StringBuilder();
                 testClass.Append(string.Format("/// <reference path=\"{0}{1}.ts\" />", this.DetermineRelativeReferencePath(this.Module), this.FileName)).Append(Environment.NewLine);
                 testClass.Append(string.Format("/// <reference path=\"{0}tsUnit.ts\" />", this.DetermineRelativeReferencePath(string.Empty))).Append(Environment.NewLine).Append(Environment.NewLine);
-                testClass.Append(string.Format("module {0} {{", this.BuildTestModulePath(this.Module).Replace('\\', '.').Trim('.'))).Append(Environment.NewLine).Append(Environment.NewLine);
+                testClass.Append(string.Format("module {0} {{", BuildTestModulePath(this.Module).Replace('\\', '.').Trim('.'))).Append(Environment.NewLine).Append(Environment.NewLine);
                 testClass.Append('\t').Append(string.Format("export class {0}Tests extends tsUnit.TestClass {{", this.FileName)).Append(Environment.NewLine).Append(Environment.NewLine);
                 testClass.Append('\t').Append("}");
                 testClass.Append(Environment.NewLine).Append(Environment.NewLine);
@@ -114,36 +114,12 @@ namespace TypeSharpParser.Types
         }
 
         /// <summary>
-        /// Builds a relative reference path between two files
-        /// </summary>
-        /// <param name="reference">The target reference</param>
-        /// <returns>A relative reference path</returns>
-        private string DetermineRelativeReferencePath(string reference)
-        {
-            string root = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            Uri from = new Uri(string.Format("{0}{1}{2}", root, Path.DirectorySeparatorChar, this.BuildTestModulePath(this.Module)));
-            Uri to;
-
-            if (!string.IsNullOrEmpty(reference))
-            {
-                to = new Uri(this.BuildReferencePath(root, reference));
-            }
-            else
-            {
-                to = new Uri(string.Format("{0}{1}", root, Path.DirectorySeparatorChar));
-            }
-
-            return Uri.UnescapeDataString(from.MakeRelativeUri(to).ToString().Replace('/', Path.DirectorySeparatorChar));
-        }
-
-        /// <summary>
         /// Builds the reference path to a target module
         /// </summary>
         /// <param name="root">The root directory</param>
         /// <param name="module">The target module</param>
         /// <returns>A full path including module</returns>
-        private string BuildReferencePath(string root, string module)
+        private static string BuildReferencePath(string root, string module)
         {
             StringBuilder path = new StringBuilder(root + Path.DirectorySeparatorChar);
             Stack<string> submodules = new Stack<string>();
@@ -180,7 +156,7 @@ namespace TypeSharpParser.Types
         /// </summary>
         /// <param name="module">The target module</param>
         /// <returns>A path for the test module</returns>
-        private string BuildTestModulePath(string module)
+        private static string BuildTestModulePath(string module)
         {
             StringBuilder path = new StringBuilder();
             Stack<string> submodules = new Stack<string>();
@@ -210,6 +186,22 @@ namespace TypeSharpParser.Types
             }
 
             return path.ToString();
+        }
+
+        /// <summary>
+        /// Builds a relative reference path between two files
+        /// </summary>
+        /// <param name="reference">The target reference</param>
+        /// <returns>A relative reference path</returns>
+        private string DetermineRelativeReferencePath(string reference)
+        {
+            string root = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            Uri from = new Uri(string.Format("{0}{1}{2}", root, Path.DirectorySeparatorChar, BuildTestModulePath(this.Module)));
+
+            Uri to = !string.IsNullOrEmpty(reference) ? new Uri(BuildReferencePath(root, reference)) : new Uri(string.Format("{0}{1}", root, Path.DirectorySeparatorChar));
+
+            return Uri.UnescapeDataString(from.MakeRelativeUri(to).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
     }
 }

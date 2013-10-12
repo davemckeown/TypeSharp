@@ -18,28 +18,26 @@ namespace TypeSharpParser.Generator
         /// <summary>
         /// The reference aggregator
         /// </summary>
-        private ReferenceAggregator referenceAggregator = new ReferenceAggregator();
+        private readonly ReferenceAggregator referenceAggregator = new ReferenceAggregator();
 
         /// <summary>
         /// The namespace and list of filename/syntax tree mappings for sources in that namespace
         /// </summary>
-        private Dictionary<string, List<KeyValuePair<string, SyntaxTree>>> namespaceSyntaxTrees = new Dictionary<string, List<KeyValuePair<string, SyntaxTree>>>();
+        private readonly Dictionary<string, List<KeyValuePair<string, SyntaxTree>>> namespaceSyntaxTrees = new Dictionary<string, List<KeyValuePair<string, SyntaxTree>>>();
 
         /// <summary>
         /// The namespace and interfaces contained in that namespace
         /// </summary>
-        private Dictionary<string, Dictionary<string, ModuleInterfaceSyntax>> namespaceInterfaces = new Dictionary<string, Dictionary<string, ModuleInterfaceSyntax>>();
+        private readonly Dictionary<string, Dictionary<string, ModuleInterfaceSyntax>> namespaceInterfaces = new Dictionary<string, Dictionary<string, ModuleInterfaceSyntax>>();
 
         /// <summary>
         /// The namespace and classes contained in that namespace
         /// </summary>
-        private Dictionary<string, Dictionary<string, ModuleClassSyntax>> namespaceClasses = new Dictionary<string, Dictionary<string, ModuleClassSyntax>>();
+        private readonly Dictionary<string, Dictionary<string, ModuleClassSyntax>> namespaceClasses = new Dictionary<string, Dictionary<string, ModuleClassSyntax>>();
 
         /// <summary>
         /// Gets the list of modules that have been parsed
         /// </summary>
-        /// <param name="module"></param>
-        /// <returns></returns>
         public List<string> Modules
         {
             get

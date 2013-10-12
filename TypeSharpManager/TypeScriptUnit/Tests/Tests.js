@@ -1,10 +1,10 @@
+/// <reference path="../tsUnit.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-/// <reference path="../tsUnit.ts" />
 var Tests;
 (function (Tests) {
     var Composer = (function () {
@@ -391,4 +391,3 @@ var Tests;
         return FailTests;
     })(tsUnit.TestClass);
 })(Tests || (Tests = {}));
-//@ sourceMappingURL=Tests.js.map

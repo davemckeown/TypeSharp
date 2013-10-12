@@ -9,7 +9,6 @@ namespace TypeSharpParser.Generator
     using System.Linq;
     using System.Text;
     using Roslyn.Compilers.CSharp;
-    using System.Xml.Linq;
 
     /// <summary>
     /// ClassGenerator that converts a ClassDeclarationSyntax to TypeScript
@@ -36,7 +35,6 @@ namespace TypeSharpParser.Generator
                 string propertyName = property.Identifier.Value.ToString();
                 string propertyType = ConvertType(property.Type, module);
 
-
                 try
                 {
                     output.Append(this.ConvertSyntaxComments(property));
@@ -46,8 +44,6 @@ namespace TypeSharpParser.Generator
                 {
                     var str = ex.ToString();
                 }
-
-
             }
 
             foreach (MethodDeclarationSyntax method in syntax.DescendantNodes().OfType<MethodDeclarationSyntax>())
@@ -56,7 +52,6 @@ namespace TypeSharpParser.Generator
                 string methodArgs = this.ConvertMethodArguments(method, module);
                 string methodType = ConvertType(method.ReturnType, module);
                 string methodBody = this.ConvertMethodBody(method);
-
 
                 output.Append(this.ConvertSyntaxComments(method));
                 output.Append('\t').Append(string.Format("{0}({1}): {2} {{", methodName, methodArgs, methodType)).Append(Environment.NewLine);
@@ -76,7 +71,6 @@ namespace TypeSharpParser.Generator
         /// <returns>The method body</returns>
         private string ConvertMethodBody(MethodDeclarationSyntax method)
         {
-
             StringBuilder output = new StringBuilder(string.Empty);
 
             output.Append(string.Format("/** @todo Implement {0} */", method.Identifier.ToString())).Append(Environment.NewLine).Append('\t', 2);

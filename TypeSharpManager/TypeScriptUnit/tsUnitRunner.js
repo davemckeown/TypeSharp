@@ -7,4 +7,3 @@ window.onload = function () {
     BadTests.Composer.compose(test);
     test.showResults(document.getElementById('result'), test.run());
 };
-//@ sourceMappingURL=tsUnitRunner.js.map

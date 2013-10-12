@@ -19,25 +19,26 @@ namespace TypeSharpParser
         /// <summary>
         /// Container for parsed types that appear in TypeSharp target files
         /// </summary>
-        private TypeAggregator parsedTypes;
+        private readonly TypeAggregator parsedTypes = new TypeAggregator();
 
         /// <summary>
         /// The interface generator
         /// </summary>
-        private InterfaceGenerator interfaceBuilder = new InterfaceGenerator();
+        private readonly InterfaceGenerator interfaceBuilder = new InterfaceGenerator();
 
         /// <summary>
         /// The class generator
         /// </summary>
-        private ClassGenerator classBuilder = new ClassGenerator();
+        private readonly ClassGenerator classBuilder = new ClassGenerator();
 
         /// <summary>
         /// Initializes a new instance of the TypeScriptGenerator class by accepting a sequence of input files
         /// </summary>
-        /// <param name="paths">The source input files</param>
+        /// <param name="paths">
+        /// The source input files
+        /// </param>
         public TypeScriptGenerator(IEnumerable<string> paths)
         {
-            this.parsedTypes = new TypeAggregator();
             this.parsedTypes.ParseInputSources(paths);
         }
 
@@ -78,8 +79,12 @@ namespace TypeSharpParser
         /// <summary>
         /// Generates a lookup for references based on the module as a key
         /// </summary>
-        /// <param name="output">The list out TypeScriptOutput instances</param>
-        /// <returns>A dictionary of TypeScriptReferenceOutput instances mapped by module</returns>
+        /// <param name="output">
+        /// The list out TypeScriptOutput instances
+        /// </param>
+        /// <returns>
+        /// A dictionary of TypeScriptReferenceOutput instances mapped by module
+        /// </returns>
         public Dictionary<string, TypeScriptReferenceOutput> GenerateReferenceOutputFiles(List<TypeScriptOutput> output)
         {
             Dictionary<string, TypeScriptReferenceOutput> result = new Dictionary<string, TypeScriptReferenceOutput>();
@@ -114,9 +119,15 @@ namespace TypeSharpParser
         /// <summary>
         /// Converts a Roslyn InterfaceDeclarationSyntax into a TypeScript interface
         /// </summary>
-        /// <param name="syntax">The Roslyn InterfaceDeclarationSyntax</param>
-        /// <param name="module">The namespace of the file</param>
-        /// <returns>A TypeScript interface declaration inside specified module</returns>
+        /// <param name="syntax">
+        /// The Roslyn InterfaceDeclarationSyntax
+        /// </param>
+        /// <param name="module">
+        /// The namespace of the file
+        /// </param>
+        /// <returns>
+        /// A TypeScript interface declaration inside specified module
+        /// </returns>
         private string GenerateInterfaceSyntax(InterfaceDeclarationSyntax syntax, string module)
         {
             return this.interfaceBuilder.Generate(syntax, module, this.parsedTypes);
@@ -125,9 +136,15 @@ namespace TypeSharpParser
         /// <summary>
         /// Converts a Roslyn ClassDeclarationSyntax into a TypeScript class
         /// </summary>
-        /// <param name="syntax">The Roslyn ClassDeclarationSyntax</param>
-        /// <param name="module">The namespace of the file</param>
-        /// <returns>A TypeScript class declaration inside specified module</returns>
+        /// <param name="syntax">
+        /// The Roslyn ClassDeclarationSyntax
+        /// </param>
+        /// <param name="module">
+        /// The namespace of the file
+        /// </param>
+        /// <returns>
+        /// A TypeScript class declaration inside specified module
+        /// </returns>
         private string GenerateClassSyntax(ClassDeclarationSyntax syntax, string module)
         {
             return this.classBuilder.Generate(syntax, module, this.parsedTypes);

@@ -18,7 +18,7 @@ namespace TypeSharp.Core
         /// <summary>
         /// The settings XML file
         /// </summary>
-        private XDocument settings;
+        private readonly XDocument settings;
 
         /// <summary>
         /// Initializes a new instance of the TypeSharpProject class
@@ -86,12 +86,28 @@ namespace TypeSharp.Core
             get
             {
                 string value = this.settings.Descendants("CreateTestClasses").Single().Value;
-                return !string.IsNullOrEmpty(value) ? Convert.ToBoolean(value) : false;
+                return !string.IsNullOrEmpty(value) && Convert.ToBoolean(value);
             }
 
             set
             {
                 this.settings.Descendants("CreateTestClasses").Single().Value = value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the TestingServer from the settings
+        /// </summary>
+        public string TestingServer
+        {
+            get
+            {
+                return this.settings.Descendants("TestingServer").Single().Value;
+            }
+
+            set
+            {
+                this.settings.Descendants("TestingServer").Single().Value = value;
             }
         }
 
@@ -116,24 +132,11 @@ namespace TypeSharp.Core
         {
             return new XDocument(
                 new XElement(
-                    "TypeSharp", 
-                    new XElement("OutputProject", string.Empty), 
+                    "TypeSharp",
+                    new XElement("OutputProject", string.Empty),
                     new XElement("ShowToolPaneWindow", string.Empty),
                     new XElement("TestingServer", string.Empty),
                     new XElement("CreateTestClasses", string.Empty)));
-        }
-
-        public string TestingServer
-        {
-            get
-            {
-                return this.settings.Descendants("TestingServer").Single().Value;
-            }
-
-            set
-            {
-                this.settings.Descendants("TestingServer").Single().Value = value;
-            }
         }
     }
 }

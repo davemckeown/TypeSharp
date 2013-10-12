@@ -1,4 +1,9 @@
-﻿using System.Reflection;
+﻿// <copyright file="AssemblyInfo.cs" company="TypeSharp Project">
+//     Apache 2.0 License
+// </copyright>
+// <author>Dave McKeown</author>
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

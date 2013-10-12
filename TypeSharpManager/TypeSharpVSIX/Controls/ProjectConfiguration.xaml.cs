@@ -81,6 +81,9 @@ namespace TypeSharp.VisualStudioExtension.Controls
             }
         }
 
+        /// <summary>
+        /// Gets or sets the TestingServer address from the project
+        /// </summary>
         public string TestingServer
         {
             get

@@ -5,11 +5,11 @@
 
 namespace TypeSharpParser.Generator
 {
-    using System.Text;
-    using System.Linq;
-    using Roslyn.Compilers.CSharp;
     using System;
+    using System.Linq;
+    using System.Text;
     using System.Xml.Linq;
+    using Roslyn.Compilers.CSharp;
 
     /// <summary>
     /// BaseConverter contains common code for interface and class converters
@@ -22,42 +22,24 @@ namespace TypeSharpParser.Generator
         protected TypeAggregator ParsedTypes { get; set; }
 
         /// <summary>
-        /// Converts method arguments to TypeScript string
+        /// Checks a CSharp source code input string to determine if it represents a collection type
         /// </summary>
-        /// <param name="method">The method declaration</param>
-        /// <param name="module">The module</param>
-        /// <returns>A TypeScript string representation</returns>
-        protected string ConvertMethodArguments(MethodDeclarationSyntax method, string module)
-        {
-            StringBuilder result = new StringBuilder();
-            string args = string.Empty;
-
-            foreach (ParameterSyntax argument in method.ParameterList.Parameters)
-            {
-                string argumentName = argument.Identifier.Value.ToString();
-                string argumentType = ConvertType(argument.Type, module);
-
-                result.Append(string.Format("{0}: {1}, ", argumentName, argumentType));
-            }
-
-            args = result.ToString();
-
-            if (result.Length > 0)
-            {
-                args = args.Substring(0, args.Length - 2);
-            }
-
-            return args;
-        }
-
+        /// <param name="parameter">The input string</param>
+        /// <returns>True if determined to be a collection type</returns>
         public bool IsCollection(string parameter)
         {
             return parameter.Contains("List<") || parameter.Contains("Collection<") || parameter.Contains("Enumerable<") || parameter.Contains("[]");
         }
 
+        /// <summary>
+        /// Converts a TypeSyntax to a TypeScript source code string
+        /// </summary>
+        /// <param name="property">A TypeSyntax for a property</param>
+        /// <param name="module">The containing module</param>
+        /// <returns>A TypeScript source code representation</returns>
         public string ConvertType(TypeSyntax property, string module)
         {
-            return string.Format("{0}{1}", ConvertToTypeScriptType(property is GenericNameSyntax ? (property as GenericNameSyntax).TypeArgumentList.Arguments[0].ToString() : property.ToString(), module), IsCollection(property.ToString()) ? "[]" : string.Empty);
+            return string.Format("{0}{1}", this.ConvertToTypeScriptType(property is GenericNameSyntax ? (property as GenericNameSyntax).TypeArgumentList.Arguments[0].ToString() : property.ToString(), module), this.IsCollection(property.ToString()) ? "[]" : string.Empty);
         }
 
         /// <summary>
@@ -104,6 +86,11 @@ namespace TypeSharpParser.Generator
             }
         }
 
+        /// <summary>
+        /// Converts the comments on a CSharp class into JSDoc comments in the TypeScript source code
+        /// </summary>
+        /// <param name="syntax">A ClassDeclarationSyntax to convert the comments for</param>
+        /// <returns>Formatted JSDoc comments</returns>
         protected string ConvertSyntaxComments(ClassDeclarationSyntax syntax)
         {
             StringBuilder output = new StringBuilder(string.Empty);
@@ -112,7 +99,6 @@ namespace TypeSharpParser.Generator
             if (comment.Kind != SyntaxKind.None)
             {
                 StringBuilder xml = new StringBuilder();
-
 
                 foreach (string line in comment.GetStructure().ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
                 {
@@ -135,10 +121,10 @@ namespace TypeSharpParser.Generator
         }
 
         /// <summary>
-        /// 
+        /// Converts the comments on a CSharp method into JSDoc comments in the TypeScript source code
         /// </summary>
-        /// <param name="syntax"></param>
-        /// <returns></returns>
+        /// <param name="syntax">A MethodDeclarationSyntax to convert the comments for</param>
+        /// <returns>Formatted JSDoc comments</returns>
         protected string ConvertSyntaxComments(MethodDeclarationSyntax syntax)
         {
             StringBuilder output = new StringBuilder(string.Empty);
@@ -167,7 +153,7 @@ namespace TypeSharpParser.Generator
                         output.Append('\t').Append("* @param ").Append(param.Attribute("name").Value).Append(" ").Append(param.Value).Append(Environment.NewLine);
                     }
 
-                    output.Append(nodes.Descendants("returns").Count() > 0 ? string.Format("{0}* @return {1}{2}", '\t', nodes.Descendants("returns").First().Value, Environment.NewLine) : string.Empty);
+                    output.Append(nodes.Descendants("returns").Any() ? string.Format("{0}* @return {1}{2}", '\t', nodes.Descendants("returns").First().Value, Environment.NewLine) : string.Empty);
 
                     output.Append('\t').Append("*/").Append(Environment.NewLine);
                 }
@@ -176,6 +162,11 @@ namespace TypeSharpParser.Generator
             return output.ToString();
         }
 
+        /// <summary>
+        /// Converts the comments on a CSharp property into JSDoc comments in the TypeScript source code
+        /// </summary>
+        /// <param name="syntax">A PropertyDeclarationSyntax to convert the comments for</param>
+        /// <returns>Formatted JSDoc comments</returns>
         protected string ConvertSyntaxComments(PropertyDeclarationSyntax syntax)
         {
             StringBuilder output = new StringBuilder(string.Empty);
@@ -203,6 +194,35 @@ namespace TypeSharpParser.Generator
             }
 
             return output.ToString();
+        }
+
+        /// <summary>
+        /// Converts method arguments to TypeScript string
+        /// </summary>
+        /// <param name="method">The method declaration</param>
+        /// <param name="module">The module</param>
+        /// <returns>A TypeScript string representation</returns>
+        protected string ConvertMethodArguments(MethodDeclarationSyntax method, string module)
+        {
+            StringBuilder result = new StringBuilder();
+            string args = string.Empty;
+
+            foreach (ParameterSyntax argument in method.ParameterList.Parameters)
+            {
+                string argumentName = argument.Identifier.Value.ToString();
+                string argumentType = this.ConvertType(argument.Type, module);
+
+                result.Append(string.Format("{0}: {1}, ", argumentName, argumentType));
+            }
+
+            args = result.ToString();
+
+            if (result.Length > 0)
+            {
+                args = args.Substring(0, args.Length - 2);
+            }
+
+            return args;
         }
     }
 }

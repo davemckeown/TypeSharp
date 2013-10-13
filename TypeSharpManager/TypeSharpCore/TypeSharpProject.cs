@@ -17,7 +17,7 @@ namespace TypeSharp.Core
     {
         /// <summary>
         /// The settings XML file
-        /// </summary>
+        /// </summary>Script
         private readonly XDocument settings;
 
         /// <summary>

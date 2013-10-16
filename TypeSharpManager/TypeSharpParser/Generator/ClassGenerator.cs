@@ -51,7 +51,7 @@ namespace TypeSharpParser.Generator
             {
                 string methodName = method.TypeParameterList.Parameters.Count == 0
                                         ? method.Identifier.Value.ToString()
-                                        : this.ConvertMethodTypeParameters(method);
+                                        : ConvertMethodTypeParameters(method);
                 string methodArgs = this.ConvertMethodArguments(method, module);
                 string methodType = ConvertType(method.ReturnType, module);
                 string methodBody = ConvertMethodBody(method);
@@ -68,27 +68,6 @@ namespace TypeSharpParser.Generator
         }
 
         /// <summary>
-        /// Converts the generic method type parameters in the method signature
-        /// </summary>
-        /// <param name="method">The method declaration syntax</param>
-        /// <returns>TypeScript method string with generics</returns>
-        private string ConvertMethodTypeParameters(MethodDeclarationSyntax method)
-        {
-            StringBuilder signature = new StringBuilder();
-
-            signature.Append(string.Format("{0}<", method.Identifier.Value));
-
-            foreach (TypeParameterSyntax parameter in method.TypeParameterList.Parameters)
-            {
-                signature.Append(string.Format("{0},", parameter.Identifier));
-            }
-
-            signature.Append(">");
-
-            return signature.ToString();
-        }
-
-        /// <summary>
         /// Generates a default body stub for a method
         /// </summary>
         /// <param name="method">The method declaration</param>
@@ -97,7 +76,7 @@ namespace TypeSharpParser.Generator
         {
             StringBuilder output = new StringBuilder(string.Empty);
 
-            output.Append(string.Format("/** @todo Implement {0} */", method.Identifier.ToString())).Append(Environment.NewLine).Append('\t', 2);
+            output.Append(string.Format("/** @todo Implement {0} */", method.Identifier)).Append(Environment.NewLine).Append('\t', 2);
 
             switch (method.ReturnType.ToString())
             {
@@ -119,6 +98,28 @@ namespace TypeSharpParser.Generator
             }
 
             return output.ToString();
+        }
+
+        /// <summary>
+        /// Converts the generic method type parameters in the method signature
+        /// </summary>
+        /// <param name="method">The method declaration syntax</param>
+        /// <returns>TypeScript method string with generics</returns>
+        private static string ConvertMethodTypeParameters(MethodDeclarationSyntax method)
+        {
+            StringBuilder signature = new StringBuilder();
+
+            signature.Append(string.Format("{0}<", method.Identifier.Value));
+
+            foreach (TypeParameterSyntax parameter in method.TypeParameterList.Parameters)
+            {
+                signature.Append(string.Format("{0},", parameter.Identifier));
+            }
+
+            signature.Remove(signature.Length - 1, 1);
+            signature.Append(">");
+
+            return signature.ToString();
         }
     }
 }

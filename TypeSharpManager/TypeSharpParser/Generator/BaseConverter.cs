@@ -39,7 +39,31 @@ namespace TypeSharpParser.Generator
         /// <returns>A TypeScript source code representation</returns>
         public string ConvertType(TypeSyntax property, string module)
         {
-            return string.Format("{0}{1}", this.ConvertToTypeScriptType(property is GenericNameSyntax ? (property as GenericNameSyntax).TypeArgumentList.Arguments[0].ToString() : property.ToString(), module), this.IsCollection(property.ToString()) ? "[]" : string.Empty);
+            string argument = property is GenericNameSyntax
+                                  ? ConvertGenericTypeArgument(property as GenericNameSyntax, module)
+                                  : this.ConvertToTypeScriptType(property.ToString(), module);
+                
+            return string.Format("{0}{1}", argument, this.IsCollection(property.ToString()) ? "[]" : string.Empty);
+        }
+
+        /// <summary>
+        /// Converts a Generic TypeSyntax into a TypeScript source code string
+        /// </summary>
+        /// <param name="property">The GenericNameSyntax to convert</param>
+        /// <returns>A string represenation of the GenericNameSyntax in TypeScript</returns>
+        private string ConvertGenericTypeArgument(GenericNameSyntax property, string module)
+        {
+            StringBuilder argument = new StringBuilder();
+
+            foreach (TypeSyntax type in property.TypeArgumentList.Arguments)
+            {
+                string name = type is GenericNameSyntax
+                                      ? this.ConvertGenericTypeArgument(type as GenericNameSyntax, module)
+                                      : this.ConvertType(type, module);
+                argument.Append(string.Format("{0}{1}", name, this.IsCollection(property.ToString()) ? "[]" : string.Empty));
+            }
+
+            return argument.ToString();
         }
 
         /// <summary>

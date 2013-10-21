@@ -68,6 +68,7 @@
     <Compile Include="Generator\ClassGenerator.cs" />
     <Compile Include="Generator\InterfaceGenerator.cs" />
     <Compile Include="Generator\ReferenceAggregator.cs" />
+    <Compile Include="Generator\SyntaxGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Generator\TypeAggregator.cs" />
     <Compile Include="TypeScriptGenerator.cs" />

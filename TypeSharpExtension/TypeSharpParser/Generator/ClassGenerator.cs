@@ -78,6 +78,7 @@ namespace TypeSharpParser.Generator
 
             output.Append(string.Format("/** @todo Implement {0} */", method.Identifier)).Append(Environment.NewLine).Append('\t', 2);
 
+
             switch (method.ReturnType.ToString())
             {
                 case "int":

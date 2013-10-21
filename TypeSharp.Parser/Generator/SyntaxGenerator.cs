@@ -4,13 +4,10 @@
 // <author>Dave McKeown</author>
 
 
-namespace TypeSharpParser.Generator
+namespace TypeSharp.Parser.Generator
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
 
     using Roslyn.Compilers.CSharp;
 

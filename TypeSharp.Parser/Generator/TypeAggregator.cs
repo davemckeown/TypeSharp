@@ -3,13 +3,17 @@
 // </copyright>
 // <author>Dave McKeown</author>
 
-namespace TypeSharpParser.Generator
+namespace TypeSharp.Parser.Generator
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using Roslyn.Compilers.CSharp;
-    using TypeSharpParser.Types;
-    
+
+    using TypeSharp.Parser.Types;
+
+    using TypeSharp.Parser.Types;
+
     /// <summary>
     /// TypeAggregator manages the parsed types and compiler symbols for a set of input files
     /// </summary>

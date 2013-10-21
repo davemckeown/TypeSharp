@@ -3,7 +3,7 @@
 // </copyright>
 // <author>Dave McKeown</author>
 
-namespace TypeSharpController.Types
+namespace TypeSharp.Parser.Types.TypeScript
 {
     /// <summary>
     /// MethodArgumentDeclaration represents a argument declaration in a method

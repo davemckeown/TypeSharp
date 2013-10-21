@@ -3,7 +3,7 @@
 // </copyright>
 // <author>Dave McKeown</author>
 
-namespace TypeSharpParser.Types
+namespace TypeSharp.Parser.Types
 {
     using Roslyn.Compilers.CSharp;
 

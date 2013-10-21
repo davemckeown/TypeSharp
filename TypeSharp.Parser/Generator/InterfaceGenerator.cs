@@ -3,11 +3,12 @@
 // </copyright>
 // <author>Dave McKeown</author>
 
-namespace TypeSharpParser.Generator
+namespace TypeSharp.Parser.Generator
 {
     using System;
     using System.Linq;
     using System.Text;
+
     using Roslyn.Compilers.CSharp;
 
     /// <summary>

@@ -3,14 +3,10 @@
 // </copyright>
 // <author>Dave McKeown</author>
 
-namespace TypeSharpParser.Types.TypeScript
+namespace TypeSharp.Parser.Types.TypeScript
 {
     using System.Collections.Generic;
     using System.Linq;
-
-    using Antlr.Runtime;
-
-    using TypeSharpController.Types;
 
     /// <summary>
     /// MethodDeclaration represents a class or interface method declaration

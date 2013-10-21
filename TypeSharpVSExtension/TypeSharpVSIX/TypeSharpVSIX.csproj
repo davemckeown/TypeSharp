@@ -222,16 +222,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TypeSharpCore\TypeSharpCore.csproj">
-      <Project>{cf7cbf08-542e-4fc9-82de-e13cdc14ff87}</Project>
-      <Name>TypeSharpCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TypeSharpParser\TypeSharpParser.csproj">
-      <Project>{37e66cfc-a332-41a9-94f6-8825fe969a30}</Project>
-      <Name>TypeSharpParser</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="Controls\ProjectConfiguration.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -243,7 +233,16 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\TypeSharp.Core\TypeSharp.Core.csproj">
+      <Project>{cf7cbf08-542e-4fc9-82de-e13cdc14ff87}</Project>
+      <Name>TypeSharp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TypeSharp.Parser\TypeSharp.Parser.csproj">
+      <Project>{37e66cfc-a332-41a9-94f6-8825fe969a30}</Project>
+      <Name>TypeSharp.Parser</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

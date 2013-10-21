@@ -8,8 +8,11 @@ namespace TypeSharpParser
     using System.Collections.Generic;
     using System.Linq;
     using Roslyn.Compilers.CSharp;
-    using TypeSharpParser.Generator;
-    using TypeSharpParser.Types;
+
+    using TypeSharp.Parser.Generator;
+    using TypeSharp.Parser.Types;
+
+    using TypeSharp.Parser.Types;
 
     /// <summary>
     /// The TypeScriptGenerator converts CSharp source files into TypeScript

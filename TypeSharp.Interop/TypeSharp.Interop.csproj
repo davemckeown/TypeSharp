@@ -16,6 +16,7 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="node.d.ts" />
     <Content Include="NodeBroker.js">
       <DependentUpon>NodeBroker.ts</DependentUpon>
     </Content>
@@ -50,13 +51,16 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>TypeSharp.Bridge</RootNamespace>
+    <RootNamespace>TypeSharp.Interop</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>TypeSharp.Interop</AssemblyName>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -92,6 +96,7 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
   <PropertyGroup>
-    <PostBuildEvent>tsc --out C:\DEVGIT\typesharp\TypeSharpManager\TypeSharpBridge\NodeRuntimeBridge.js C:\DEVGIT\typesharp\TypeSharpManager\TypeSharpBridge\NodeBroker.ts C:\DEVGIT\typesharp\TypeSharpManager\TypeScriptUnit\tsUnit.ts</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

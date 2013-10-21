@@ -21,8 +21,10 @@ namespace TypeSharp.VisualStudioExtension
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using TypeSharp.Core;
+    using TypeSharp.Parser.Types;
+
     using TypeSharpParser;
-    using TypeSharpParser.Types;
+    using TypeSharp.Parser.Types;
 
     /// <summary>
     /// TypeSharpController manages interaction with the visual studio extension

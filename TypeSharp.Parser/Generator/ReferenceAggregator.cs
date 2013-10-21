@@ -3,7 +3,7 @@
 // </copyright>
 // <author>Dave McKeown</author>
 
-namespace TypeSharpParser.Generator
+namespace TypeSharp.Parser.Generator
 {
     using System.Collections.Generic;
 

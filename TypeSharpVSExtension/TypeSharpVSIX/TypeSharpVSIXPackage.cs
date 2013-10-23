@@ -46,7 +46,7 @@ namespace TypeSharp.VisualStudioExtension
 
             this.IDEInstance.Events.BuildEvents.OnBuildBegin += this.Controller.BuildEvents_OnBuildBegin;
             this.IDEInstance.Events.BuildEvents.OnBuildDone += this.Controller.BuildEvents_OnBuildDone;
-            this.IDEInstance.Events.BuildEvents.OnBuildProjConfigDone += this.Controller.BuildEvents_OnBuildProjConfigDone;
+            this.IDEInstance.Events.BuildEvents.OnBuildProjConfigDone += this.Controller.BuildEvents_OnBuildProjectConfigDone;
             this.IDEInstance.Events.SolutionEvents.Opened += this.Controller.SolutionEvents_Opened;
             this.IDEInstance.Events.SolutionEvents.AfterClosing += this.Controller.SolutionEvents_AfterClosing;
             this.IDEInstance.Events.SolutionEvents.BeforeClosing += this.Controller.SolutionEvents_BeforeClosing;

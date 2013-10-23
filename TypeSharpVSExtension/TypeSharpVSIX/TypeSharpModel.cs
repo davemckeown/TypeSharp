@@ -50,9 +50,9 @@ namespace TypeSharp.VisualStudioExtension
                 {
                     yield return item;
 
-                    foreach (ProjectItem subitem in this.SubProjectItems(item))
+                    foreach (ProjectItem projectItem in this.SubProjectItems(item))
                     {
-                        yield return subitem;
+                        yield return projectItem;
                     }
                 }
             }

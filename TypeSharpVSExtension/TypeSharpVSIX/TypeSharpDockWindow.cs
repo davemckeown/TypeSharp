@@ -5,7 +5,6 @@
 
 namespace TypeSharp.VisualStudioExtension
 {
-    using System;
     using System.Runtime.InteropServices;
     using Microsoft.VisualStudio.Shell;
     using TypeSharp.VisualStudioExtension.Controls;
@@ -18,12 +17,11 @@ namespace TypeSharp.VisualStudioExtension
     /// implementation of the IVsUIElementPane interface.
     /// </summary>
     [Guid("283e2b7b-764d-4955-ab67-8a90ee798d3c")]
-    public class TypeSharpDockWindow : ToolWindowPane
+    public sealed class TypeSharpDockWindow : ToolWindowPane
     {
         /// <summary>
         /// Initializes a new instance of the TypeSharpDockWindow class
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "Rule broken by generated code")]
         public TypeSharpDockWindow() :
             base(null)
         {

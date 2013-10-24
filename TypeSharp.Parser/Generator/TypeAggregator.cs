@@ -161,24 +161,24 @@ namespace TypeSharp.Parser.Generator
 
             foreach (string path in paths)
             {
-                if (!sourceSyntaxTrees.ContainsKey(path))
+                if (sourceSyntaxTrees.ContainsKey(path))
                 {
-                    SyntaxTree tree = SyntaxTree.ParseFile(path);
-                    sourceSyntaxTrees.Add(path, tree);
+                    continue;
+                }
 
-                    CompilationUnitSyntax root = tree.GetRoot() as CompilationUnitSyntax;
+                SyntaxTree tree = SyntaxTree.ParseFile(path);
+                sourceSyntaxTrees.Add(path, tree);
 
-                    foreach (NamespaceDeclarationSyntax module in root.DescendantNodes().OfType<NamespaceDeclarationSyntax>())
+                CompilationUnitSyntax root = tree.GetRoot();
+
+                foreach (string name in root.DescendantNodes().OfType<NamespaceDeclarationSyntax>().Select(module => module.Name.ToString()))
+                {
+                    if (!this.namespaceSyntaxTrees.ContainsKey(name))
                     {
-                        string name = module.Name.ToString();
-
-                        if (!this.namespaceSyntaxTrees.ContainsKey(name))
-                        {
-                            this.namespaceSyntaxTrees.Add(name, new List<KeyValuePair<string, SyntaxTree>>());
-                        }
-
-                        this.namespaceSyntaxTrees[name].Add(new KeyValuePair<string, SyntaxTree>(path, tree));
+                        this.namespaceSyntaxTrees.Add(name, new List<KeyValuePair<string, SyntaxTree>>());
                     }
+
+                    this.namespaceSyntaxTrees[name].Add(new KeyValuePair<string, SyntaxTree>(path, tree));
                 }
             }
 
@@ -195,19 +195,16 @@ namespace TypeSharp.Parser.Generator
             {
                 foreach (KeyValuePair<string, SyntaxTree> file in module.Value)
                 {
-                    CompilationUnitSyntax root = file.Value.GetRoot() as CompilationUnitSyntax;
+                    CompilationUnitSyntax root = file.Value.GetRoot();
 
-                    foreach (InterfaceDeclarationSyntax unit in root.DescendantNodes().OfType<InterfaceDeclarationSyntax>())
+                    foreach (InterfaceDeclarationSyntax unit in root.DescendantNodes().OfType<InterfaceDeclarationSyntax>().Where(unit => unit.AttributeLists != null && unit.AttributeLists[0].Attributes.Any(x => x.Name.ToString().Contains("TypeSharpCompile"))))
                     {
-                        if (unit.AttributeLists != null && unit.AttributeLists[0].Attributes.Any(x => x.Name.ToString().Contains("TypeSharpCompile")))
+                        if (!this.namespaceInterfaces.ContainsKey(module.Key))
                         {
-                            if (!this.namespaceInterfaces.ContainsKey(module.Key))
-                            {
-                                this.namespaceInterfaces.Add(module.Key, new Dictionary<string, ModuleInterfaceSyntax>());
-                            }
-
-                            this.namespaceInterfaces[module.Key].Add(file.Key, new ModuleInterfaceSyntax() { SourceFile = file.Key, Identifier = unit.Identifier.Value.ToString(), Syntax = unit });
+                            this.namespaceInterfaces.Add(module.Key, new Dictionary<string, ModuleInterfaceSyntax>());
                         }
+
+                        this.namespaceInterfaces[module.Key].Add(file.Key, new ModuleInterfaceSyntax { SourceFile = file.Key, Identifier = unit.Identifier.Value.ToString(), Syntax = unit });
                     }
                 }
             }
@@ -222,7 +219,7 @@ namespace TypeSharp.Parser.Generator
             {
                 foreach (KeyValuePair<string, SyntaxTree> file in module.Value)
                 {
-                    CompilationUnitSyntax root = file.Value.GetRoot() as CompilationUnitSyntax;
+                    CompilationUnitSyntax root = file.Value.GetRoot();
 
                     foreach (ClassDeclarationSyntax unit in root.DescendantNodes().OfType<ClassDeclarationSyntax>())
                     {
@@ -233,7 +230,7 @@ namespace TypeSharp.Parser.Generator
                                 this.namespaceClasses.Add(module.Key, new Dictionary<string, ModuleClassSyntax>());
                             }
 
-                            this.namespaceClasses[module.Key].Add(file.Key, new ModuleClassSyntax() { SourceFile = file.Key, Identifier = unit.Identifier.Value.ToString(), Syntax = unit });
+                            this.namespaceClasses[module.Key].Add(file.Key, new ModuleClassSyntax { SourceFile = file.Key, Identifier = unit.Identifier.Value.ToString(), Syntax = unit });
                         }
                     }
                 }

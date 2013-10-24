@@ -34,23 +34,13 @@ namespace TypeSharp.Parser.Generator
 
             foreach (PropertyDeclarationSyntax property in syntax.DescendantNodes().OfType<PropertyDeclarationSyntax>())
             {
-                string propertyName = property.Identifier.Value.ToString();
-                string propertyType = ConvertType(property.Type, module);
-
-                try
-                {
-                    output.Append(this.ConvertSyntaxComments(property));
-                    output.Append('\t').Append(string.Format("{0}: {1};", propertyName, propertyType)).Append(Environment.NewLine).Append(Environment.NewLine);
-                }
-                catch (Exception ex)
-                {
-                    Debug.Assert(false, ex.ToString());
-                }
+                string script = ConvertPropertySyntax(property, module);
+                output.Append('\t', 2).Append(script);
             }
 
             foreach (MethodDeclarationSyntax method in syntax.DescendantNodes().OfType<MethodDeclarationSyntax>())
             {
-                string methodName = method.TypeParameterList.Parameters.Count == 0
+                string methodName = method.TypeParameterList == null
                                         ? method.Identifier.Value.ToString()
                                         : ConvertMethodTypeParameters(method);
                 string methodArgs = this.ConvertMethodArguments(method, module);
@@ -64,6 +54,36 @@ namespace TypeSharp.Parser.Generator
             }
 
             output.Append("}").Append(Environment.NewLine);
+
+            return output.ToString();
+        }
+
+        private string ConvertPropertySyntax(PropertyDeclarationSyntax property, string module)
+        {
+            StringBuilder output = new StringBuilder();
+
+            try
+            {
+                string propertyName = property.Identifier.Value.ToString();
+                string propertyType = ConvertType(property.Type, module);
+                output.Append(this.ConvertSyntaxComments(property));
+
+                if (property.AccessorList.Accessors.Any(x => x.Keyword.Kind == SyntaxKind.GetKeyword))
+                {
+                    output.Append(string.Format("get {0}() : {1} {{ return this._{0}; }}", propertyName, propertyType));
+                    output.Append(Environment.NewLine).Append(Environment.NewLine);
+                }
+
+                if (property.AccessorList.Accessors.Any(x => x.Keyword.Kind == SyntaxKind.SetKeyword))
+                {
+                    output.Append(string.Format("set {0}(value: {1}) : void {{ this._{0} = value; }}", propertyName, propertyType));
+                    output.Append(Environment.NewLine).Append(Environment.NewLine);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Assert(false, ex.ToString());
+            }
 
             return output.ToString();
         }
@@ -115,10 +135,10 @@ namespace TypeSharp.Parser.Generator
 
             foreach (TypeParameterSyntax parameter in method.TypeParameterList.Parameters)
             {
-                signature.Append(string.Format("{0},", parameter.Identifier));
+                signature.Append(string.Format("{0}, ", parameter.Identifier));
             }
 
-            signature.Remove(signature.Length - 1, 1);
+            signature.Remove(signature.Length - 2, 2);
             signature.Append(">");
 
             return signature.ToString();

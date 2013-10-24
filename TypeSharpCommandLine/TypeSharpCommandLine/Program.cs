@@ -22,12 +22,16 @@ namespace TypeSharpCommandLine
 
             var output = new TypeScriptGenerator(files).GenerateOutputFiles();
 
-            Directory.Delete("C:/DEVGIT/TypeScript/TestCompileProject/bin", true);
+            if (Directory.Exists("C:/DEVGIT/TypeSharp/TestCompileProject/typesharp_bin"))
+            {
+                Directory.Delete("C:/DEVGIT/TypeSharp/TestCompileProject/typesharp_bin", true);
+            }
 
+            Directory.CreateDirectory("C:/DEVGIT/TypeSharp/TestCompileProject/typesharp_bin");
 
             foreach (var file in output)
             {
-                File.WriteAllText(string.Format("{0}{1}{2}", file.FilePath, Path.DirectorySeparatorChar, file.FileName), file.Syntax);
+                File.WriteAllText(string.Format("C:/DEVGIT/TypeSharp/TestCompileProject/typesharp_bin/{0}.ts", file.FileName), file.Syntax);
             }
 
             Environment.Exit(0);

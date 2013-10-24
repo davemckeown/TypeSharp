@@ -199,7 +199,7 @@ namespace TypeSharp.Parser.Generator
 
                     foreach (InterfaceDeclarationSyntax unit in root.DescendantNodes().OfType<InterfaceDeclarationSyntax>())
                     {
-                        if (unit.AttributeLists != null && unit.AttributeLists[0].Attributes.Any(x => x.Name.ToString() == "TypeSharpInterface" || x.Name.ToString() == "TypeSharp.TypeSharpInterface"))
+                        if (unit.AttributeLists != null && unit.AttributeLists[0].Attributes.Any(x => x.Name.ToString().Contains("TypeSharpCompile")))
                         {
                             if (!this.namespaceInterfaces.ContainsKey(module.Key))
                             {
@@ -226,7 +226,7 @@ namespace TypeSharp.Parser.Generator
 
                     foreach (ClassDeclarationSyntax unit in root.DescendantNodes().OfType<ClassDeclarationSyntax>())
                     {
-                        if (unit.AttributeLists != null && unit.AttributeLists[0].Attributes.Any(x => x.Name.ToString() == "TypeSharpClass" || x.Name.ToString() == "TypeSharp.TypeSharpClass"))
+                        if (unit.AttributeLists != null && unit.AttributeLists[0].Attributes.Any(x => x.Name.ToString().Contains("TypeSharpCompile")))
                         {
                             if (!this.namespaceClasses.ContainsKey(module.Key))
                             {

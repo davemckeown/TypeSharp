@@ -39,10 +39,6 @@ var System;
         };
 
         Object.prototype.ToString = function () {
-            var test = System.DateTimeKind.Local;
-
-            test = System.DateTimeKind.Utc;
-
             return "System.Object";
         };
         return Object;

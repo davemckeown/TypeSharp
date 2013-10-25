@@ -6,6 +6,7 @@
 namespace TypeSharp.Parser.Generator
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
@@ -29,13 +30,37 @@ namespace TypeSharp.Parser.Generator
             StringBuilder output = new StringBuilder();
             this.ParsedTypes = parsedTypes;
 
-            output.Append(this.ConvertSyntaxComments(syntax));
-            output.Append(string.Format("export class {0} {{", syntax.Identifier.Value)).Append(Environment.NewLine).Append(Environment.NewLine);
+            string classIdentifier = syntax.TypeParameterList == null
+                                         ? syntax.Identifier.Value.ToString()
+                                         : ConvertClassTypeParameters(syntax);
 
-            foreach (PropertyDeclarationSyntax property in syntax.DescendantNodes().OfType<PropertyDeclarationSyntax>())
+            output.Append(this.ConvertSyntaxComments(syntax));
+            output.Append(string.Format("export class {0} {{", classIdentifier)).Append(Environment.NewLine).Append(Environment.NewLine);
+
+
+            foreach (var field in syntax.DescendantNodes().OfType<FieldDeclarationSyntax>())
+            {
+                output.Append('\t', 2).Append(string.Format("{0} {1}: {2};", field.Modifiers.Any(x => x.Kind == SyntaxKind.PrivateKeyword) ? "private" : "public", field.Declaration.Variables, field.Declaration.Type));
+                output.Append(Environment.NewLine);
+            }
+
+            output.Append(Environment.NewLine);
+
+            List<PropertyDeclarationSyntax> properties =
+                syntax.DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
+
+            foreach (PropertyDeclarationSyntax property in properties)
+            {
+                output.Append('\t', 2).Append(string.Format("private _{0} : {1};", property.Identifier.Value, ConvertType(property.Type, module)));
+                output.Append(Environment.NewLine);
+            }
+
+            output.Append(Environment.NewLine);
+
+            foreach (PropertyDeclarationSyntax property in properties)
             {
                 string script = ConvertPropertySyntax(property, module);
-                output.Append('\t', 2).Append(script);
+                output.Append(script);
             }
 
             foreach (MethodDeclarationSyntax method in syntax.DescendantNodes().OfType<MethodDeclarationSyntax>())
@@ -58,6 +83,50 @@ namespace TypeSharp.Parser.Generator
             return output.ToString();
         }
 
+        /// <summary>
+        /// Converts the generic method type parameters in the method signature
+        /// </summary>
+        /// <param name="method">The method declaration syntax</param>
+        /// <returns>TypeScript method string with generics</returns>
+        private static string ConvertMethodTypeParameters(MethodDeclarationSyntax method)
+        {
+            StringBuilder signature = new StringBuilder();
+
+            signature.Append(string.Format("{0}<", method.Identifier.Value));
+
+            foreach (TypeParameterSyntax parameter in method.TypeParameterList.Parameters)
+            {
+                signature.Append(string.Format("{0}, ", parameter.Identifier));
+            }
+
+            signature.Remove(signature.Length - 2, 2);
+            signature.Append(">");
+
+            return signature.ToString();
+        }
+
+        /// <summary>
+        /// Converts the generic method type parameters in the class signature
+        /// </summary>
+        /// <param name="syntax">The class declaration syntax</param>
+        /// <returns>TypeScript class identifier with generic types</returns>
+        private static string ConvertClassTypeParameters(ClassDeclarationSyntax syntax)
+        {
+            StringBuilder signature = new StringBuilder();
+
+            signature.Append(string.Format("{0}<", syntax.Identifier.Value));
+
+            foreach (TypeParameterSyntax parameter in syntax.TypeParameterList.Parameters)
+            {
+                signature.Append(string.Format("{0}, ", parameter.Identifier));
+            }
+
+            signature.Remove(signature.Length - 2, 2);
+            signature.Append(">");
+
+            return signature.ToString();
+        }
+
         private string ConvertPropertySyntax(PropertyDeclarationSyntax property, string module)
         {
             StringBuilder output = new StringBuilder();
@@ -70,13 +139,13 @@ namespace TypeSharp.Parser.Generator
 
                 if (property.AccessorList.Accessors.Any(x => x.Keyword.Kind == SyntaxKind.GetKeyword))
                 {
-                    output.Append(string.Format("get {0}() : {1} {{ return this._{0}; }}", propertyName, propertyType));
+                    output.Append('\t', 2).Append(string.Format("get {0}() : {1} {{ return this._{0}; }}", propertyName, propertyType));
                     output.Append(Environment.NewLine).Append(Environment.NewLine);
                 }
 
                 if (property.AccessorList.Accessors.Any(x => x.Keyword.Kind == SyntaxKind.SetKeyword))
                 {
-                    output.Append(string.Format("set {0}(value: {1}) : void {{ this._{0} = value; }}", propertyName, propertyType));
+                    output.Append('\t', 2).Append(string.Format("set {0}(value: {1}) {{ this._{0} = value; }}", propertyName, propertyType));
                     output.Append(Environment.NewLine).Append(Environment.NewLine);
                 }
             }
@@ -120,28 +189,6 @@ namespace TypeSharp.Parser.Generator
             }
 
             return output.ToString();
-        }
-
-        /// <summary>
-        /// Converts the generic method type parameters in the method signature
-        /// </summary>
-        /// <param name="method">The method declaration syntax</param>
-        /// <returns>TypeScript method string with generics</returns>
-        private static string ConvertMethodTypeParameters(MethodDeclarationSyntax method)
-        {
-            StringBuilder signature = new StringBuilder();
-
-            signature.Append(string.Format("{0}<", method.Identifier.Value));
-
-            foreach (TypeParameterSyntax parameter in method.TypeParameterList.Parameters)
-            {
-                signature.Append(string.Format("{0}, ", parameter.Identifier));
-            }
-
-            signature.Remove(signature.Length - 2, 2);
-            signature.Append(">");
-
-            return signature.ToString();
         }
     }
 }

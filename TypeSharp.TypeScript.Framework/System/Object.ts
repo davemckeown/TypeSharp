@@ -50,11 +50,6 @@ module System {
         }
 
         ToString(): string {
-
-            var test = DateTimeKind.Local;
-
-            test = DateTimeKind.Utc;
-
             return "System.Object";
         }
 

@@ -5,9 +5,16 @@
     using TypeSharp;
 
     [TypeSharpCompile]
-    public class TestSyntaxGenClass
+    public class TestSyntaxGenClass<T>
     {
+
+        public string publicField;
+
+        private string privateField;
+
         public int NumberProp { get; set; }
+
+        public T GenericProp { get; set; }
 
         public string StringProp
         {

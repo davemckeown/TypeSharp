@@ -5,7 +5,6 @@ var System;
     var Type = (function () {
         // Constructor
         function Type() {
-            this.__typeSharpType = this;
         }
         Object.defineProperty(Type.prototype, "Assembly", {
             get: function () {
